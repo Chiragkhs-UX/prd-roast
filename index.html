@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD Roast — Upload. Get Judged. Earn Respect.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  /* ── BRIGHTENED palette ── */
+  --bg:        #13151C;
+  --bg-lighter:#1A1D27;
+  --surface:   #20232E;
+  --surface2:  #272B38;
+  --border:    rgba(255,255,255,0.10);
+  --border2:   rgba(255,255,255,0.18);
+
+  --green:     #1EE07A;
+  --green-dim: rgba(30,224,122,0.14);
+  --green-hi:  rgba(30,224,122,0.35);
+  --purple:    #B46EFF;
+  --purple-dim:rgba(180,110,255,0.14);
+  --purple-hi: rgba(180,110,255,0.35);
+  --orange:    #FF6540;
+  --orange-dim:rgba(255,101,64,0.14);
+  --yellow:    #FFD60A;
+  --yellow-dim:rgba(255,214,10,0.12);
+  --blue:      #4B9EFF;
+
+  --text:      #F4F5F8;
+  --text-mid:  #8A93B0;
+  --text-dim:  #454D66;
+
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --mono:'Space Mono',monospace;
+
+  --nav: 56px;
+  --bar: 76px;
+}
+
+html,body{
+  height:100%;overflow:hidden;
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:2px;}
+
+/* ══════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:var(--nav);padding:0 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(19,21,28,0.92);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:15px;font-weight:700;
+  color:var(--text);
+}
+.nav-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 12px var(--green-hi);
+  animation:breathe 2.8s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{box-shadow:0 0 8px var(--green-hi);}
+  50%{box-shadow:0 0 22px var(--green-hi),0 0 40px rgba(30,224,122,0.15);}
+}
+.nav-logo span{color:var(--green);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+#nav-badge{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  padding:4px 14px;border-radius:100px;
+  background:var(--purple-dim);border:1px solid var(--purple-hi);
+  color:var(--purple);letter-spacing:0.5px;display:none;
+}
+#nav-badge.show{display:block;}
+/* Stakeholder recorder nav button */
+#nav-record-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 16px;border-radius:8px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  color:var(--text-mid);
+  font-family:var(--sans);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all 0.18s;
+}
+#nav-record-btn:hover{background:var(--surface2);color:var(--text);border-color:var(--orange);}
+#nav-record-btn.recording{background:rgba(255,101,64,0.15);border-color:var(--orange);color:var(--orange);}
+.rec-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--text-dim);transition:background 0.2s;
+}
+#nav-record-btn.recording .rec-dot{background:var(--orange);animation:recPulse 1s ease-in-out infinite;}
+@keyframes recPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* ══════════════════════════════════════════════
+   SCREENS
+══════════════════════════════════════════════ */
+.screen{
+  position:fixed;inset:0;
+  top:var(--nav);
+  transition:opacity 0.4s,transform 0.4s;
+}
+.screen.hidden{opacity:0;pointer-events:none;transform:translateY(10px);}
+
+/* ══════════════════════════════════════════════
+   LANDING PAGE  (Screen 1)
+══════════════════════════════════════════════ */
+#screen-landing{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 24px 100px;
+  overflow-y:auto;
+  background:
+    radial-gradient(ellipse 700px 400px at 50% -60px, rgba(30,224,122,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 300px at 80% 80%, rgba(180,110,255,0.06) 0%, transparent 70%),
+    var(--bg);
+}
+
+/* eyebrow */
+.landing-eyebrow{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--green);
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:28px;
+}
+.landing-eyebrow::before,.landing-eyebrow::after{
+  content:'';width:32px;height:1px;background:var(--green-hi);
+}
+
+/* big headline */
+.landing-h1{
+  font-size:clamp(38px,6vw,72px);font-weight:800;
+  line-height:1.08;letter-spacing:-2px;
+  text-align:center;margin-bottom:22px;
+  color:var(--text);
+  max-width:800px;
+}
+.landing-h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--green) 0%,var(--blue) 60%,var(--purple) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.landing-sub{
+  font-size:17px;color:var(--text-mid);
+  text-align:center;max-width:480px;
+  line-height:1.65;margin-bottom:44px;
+  font-weight:400;
+}
+.landing-sub b{color:var(--text);font-weight:600;}
+
+/* intensity selector */
+.intensity-section{
+  display:flex;align-items:center;gap:10px;margin-bottom:32px;
+}
+.intensity-label{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);
+}
+.int-pill{
+  padding:8px 20px;border-radius:100px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  color:var(--text-mid);
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all 0.18s;
+}
+.int-pill:hover{color:var(--text);border-color:var(--border2);}
+.int-pill.on{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
+
+/* upload box */
+.upload-box{
+  width:100%;max-width:640px;
+  background:var(--surface);
+  border:2px dashed var(--border2);
+  border-radius:20px;
+  padding:36px 32px;
+  text-align:center;
+  cursor:pointer;
+  position:relative;
+  transition:all 0.22s;
+  margin-bottom:16px;
+}
+.upload-box:hover,.upload-box.drag{
+  border-color:var(--green);
+  background:var(--bg-lighter);
+  box-shadow:0 0 0 4px var(--green-dim);
+}
+.upload-box input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.upload-icon{font-size:36px;margin-bottom:12px;display:block;}
+.upload-title{font-size:16px;font-weight:700;margin-bottom:5px;}
+.upload-sub{font-size:13px;color:var(--text-mid);}
+.upload-sub span{color:var(--green);}
+.upload-file-types{
+  display:flex;gap:7px;justify-content:center;margin-top:14px;flex-wrap:wrap;
+}
+.ft-tag{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  padding:3px 10px;border-radius:5px;
+  background:rgba(255,255,255,0.06);
+  color:var(--text-dim);letter-spacing:1px;
+}
+.upload-or{
+  font-family:var(--mono);font-size:10px;color:var(--text-dim);
+  letter-spacing:2px;text-transform:uppercase;
+  margin:12px 0;
+}
+/* paste zone on landing */
+.landing-paste{
+  width:100%;max-width:640px;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  overflow:hidden;
+  margin-bottom:24px;
+}
+.landing-paste textarea{
+  width:100%;min-height:100px;
+  background:transparent;
+  border:none;
+  color:var(--text);font-family:var(--sans);font-size:13px;
+  padding:16px 18px;resize:none;outline:none;
+  line-height:1.6;
+}
+.landing-paste textarea::placeholder{color:var(--text-dim);}
+.paste-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 18px;border-top:1px solid var(--border);
+  background:var(--bg-lighter);
+}
+.paste-char{font-family:var(--mono);font-size:10px;color:var(--text-dim);}
+.paste-sample-btn{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--text-dim);background:none;border:none;cursor:pointer;
+  transition:color 0.15s;letter-spacing:0.5px;
+}
+.paste-sample-btn:hover{color:var(--green);}
+
+/* main CTA */
+#landing-cta{
+  width:100%;max-width:640px;
+  height:52px;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  border:none;border-radius:12px;
+  color:#081A0E;font-family:var(--sans);font-size:15px;font-weight:800;
+  cursor:pointer;letter-spacing:-0.3px;
+  transition:all 0.2s;
+  box-shadow:0 0 28px rgba(30,224,122,0.25);
+}
+#landing-cta:hover{transform:translateY(-2px);box-shadow:0 6px 32px rgba(30,224,122,0.35);}
+#landing-cta:active{transform:none;}
+#landing-cta:disabled{
+  background:var(--surface2);color:var(--text-dim);
+  box-shadow:none;cursor:not-allowed;transform:none;
+}
+
+/* feature tags */
+.feature-tags{
+  display:flex;gap:10px;margin-top:28px;flex-wrap:wrap;justify-content:center;
+}
+.feat-tag{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;color:var(--text-mid);
+  padding:7px 16px;border-radius:100px;
+  border:1px solid var(--border);
+  background:var(--surface);
+}
+
+/* ══════════════════════════════════════════════
+   APP SCREEN  (Screen 2 — results)
+══════════════════════════════════════════════ */
+#screen-app{
+  top:var(--nav);
+  bottom:var(--bar);
+  display:grid;
+  grid-template-columns:30% 70%;
+  overflow:hidden;
+}
+
+/* ── LEFT: LEVEL LADDER ── */
+#left{
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  padding:20px 14px 20px;
+  overflow-y:auto;overflow-x:hidden;
+  gap:7px;
+  background:var(--bg);
+}
+#left-hdr{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--text-dim);padding:0 4px;margin-bottom:4px;
+}
+.lvl-card{
+  border-radius:12px;border:1px solid var(--border);
+  background:var(--surface);padding:12px 14px;
+  cursor:default;
+  transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+  position:relative;overflow:hidden;
+}
+.lvl-card.future{opacity:0.28;filter:saturate(0.15);}
+.lvl-card.past{opacity:0.5;}
+.lvl-card.active{
+  border-color:var(--lc,var(--green));background:var(--surface2);
+  box-shadow:0 0 0 1px var(--lc,var(--green)),0 0 28px rgba(30,224,122,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  transform:scale(1.02);
+}
+.lvl-card.active::before{
+  content:'';position:absolute;inset:0;border-radius:12px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.05) 0%,transparent 60%);
+  pointer-events:none;
+}
+.lvl-card.active::after{
+  content:'';position:absolute;left:0;top:18%;bottom:18%;
+  width:3px;border-radius:0 2px 2px 0;
+  background:var(--lc,var(--green));box-shadow:0 0 10px var(--lc,var(--green));
+}
+.lvl-top{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.lvl-icon{
+  width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
+  background:var(--li,rgba(255,255,255,0.07));transition:background 0.4s;
+}
+.lvl-card.active .lvl-icon{background:var(--li,rgba(255,255,255,0.12));}
+.lvl-name{font-size:12px;font-weight:700;color:var(--text-dim);transition:color 0.4s;line-height:1.2;}
+.lvl-range{font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-top:2px;}
+.lvl-card.active .lvl-name{color:var(--lc,var(--green));}
+.lvl-card.past  .lvl-name{color:rgba(255,255,255,0.45);}
+.lvl-card.active .lvl-range{color:var(--text-mid);}
+.lvl-wit{font-size:11px;color:var(--text-dim);line-height:1.45;font-style:italic;transition:color 0.4s;}
+.lvl-card.active .lvl-wit{color:var(--text-mid);}
+.lvl-card.past  .lvl-wit{color:rgba(255,255,255,0.3);}
+
+#xp-box{
+  margin-top:4px;padding:14px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;flex-shrink:0;
+}
+#xp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+#xp-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);}
+#xp-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);}
+#xp-num span{color:var(--text-dim);font-size:10px;}
+#xp-track{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin-bottom:8px;}
+#xp-fill{height:100%;border-radius:3px;background:var(--green);width:0%;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
+#xp-hint{font-size:11px;color:var(--text-dim);line-height:1.5;}
+#xp-hint b{color:var(--text-mid);}
+
+/* ── RIGHT PANEL ── */
+#right{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+
+/* top score bar */
+#top-bar{
+  flex-shrink:0;display:flex;align-items:center;gap:20px;
+  padding:18px 24px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg-lighter);
+}
+#face-wrap{flex-shrink:0;position:relative;}
+#face-halo{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:90px;height:90px;border-radius:50%;
+  background:radial-gradient(circle,rgba(30,224,122,0.18) 0%,transparent 70%);
+  transition:background 0.6s;pointer-events:none;
+}
+#face-svg{display:block;position:relative;z-index:1;}
+#score-block{flex-shrink:0;}
+#score-num{
+  font-family:var(--mono);font-size:60px;font-weight:700;
+  line-height:1;letter-spacing:-2.5px;transition:color 0.5s;
+}
+#score-sub{
+  font-family:var(--mono);font-size:9px;
+  color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:3px;
+}
+#lvl-block{flex:1;}
+#lvl-tag{
+  display:inline-block;
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;
+  border:1px solid var(--border2);color:var(--text-dim);
+  margin-bottom:6px;transition:all 0.5s;
+}
+#lvl-name{font-size:18px;font-weight:800;margin-bottom:4px;letter-spacing:-0.3px;transition:color 0.5s;}
+#lvl-micro{font-size:12px;color:var(--text-mid);font-style:italic;line-height:1.5;}
+
+/* scroll */
+#rscroll{flex:1;overflow-y:auto;min-height:0;}
+
+/* section audit */
+#section-audit{
+  padding:12px 18px 10px;
+  border-bottom:1px solid var(--border);
+  display:none;
+}
+#section-audit.has-data{display:block;}
+.audit-label{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:8px;
+}
+.audit-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.audit-chip{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  padding:4px 10px;border-radius:6px;
+  letter-spacing:0.3px;white-space:nowrap;
+  animation:fadeUp 0.35s ease both;
+}
+.audit-chip.found{
+  background:rgba(30,224,122,0.12);
+  border:1px solid rgba(30,224,122,0.28);
+  color:var(--green);
+}
+.audit-chip.missing{
+  background:rgba(255,101,64,0.1);
+  border:1px solid rgba(255,101,64,0.22);
+  color:var(--orange);opacity:0.75;
+}
+
+.m-reason{
+  font-size:10px;color:var(--text-dim);
+  line-height:1.4;margin-top:6px;
+  font-style:italic;
+  min-height:0;
+  transition:opacity 0.4s;
+}
+
+/* Score improvement guide */
+#score-guide{
+  display:none;
+  margin:0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:18px 20px 20px;
+  background:rgba(255,101,64,0.04);
+  animation:fadeUp 0.4s ease both;
+}
+#score-guide.show{display:block;}
+.sg-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.sg-icon{font-size:16px;}
+.sg-title{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--orange);
+}
+.sg-subtitle{
+  font-size:11px;color:var(--text-mid);margin-left:auto;
+  font-style:italic;
+}
+.sg-steps{display:flex;flex-direction:column;gap:10px;}
+.sg-step{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:11px 14px;
+  background:rgba(255,101,64,0.07);
+  border:1px solid rgba(255,101,64,0.18);
+  border-radius:10px;
+  animation:fadeUp 0.35s ease both;
+}
+.sg-step-num{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--orange);flex-shrink:0;
+  width:20px;padding-top:1px;
+}
+.sg-step-text{
+  font-size:12px;line-height:1.6;color:var(--text);
+}
+
+/* card cols */
+#card-cols{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:12px;padding:16px 18px;
+  border-bottom:1px solid var(--border);
+}
+.c-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:16px;transition:border-color 0.2s;
+}
+.c-card:hover{border-color:var(--border2);}
+.c-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.c-icon{font-size:14px;}
+.c-title{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+
+/* roast bubbles */
+.roast-card{border-color:rgba(255,101,64,0.22);}
+.roast-card:hover{border-color:rgba(255,101,64,0.4);}
+.roast-card .c-title{color:var(--orange);}
+.rbubble{
+  background:var(--orange-dim);border:1px solid rgba(255,101,64,0.2);
+  border-radius:10px 10px 10px 3px;padding:10px 12px;
+  margin-bottom:8px;font-size:12px;line-height:1.55;color:var(--text);
+  animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.rbubble:last-child{margin-bottom:0;}
+
+/* applause */
+.app-card{border-color:rgba(30,224,122,0.2);}
+.app-card:hover{border-color:rgba(30,224,122,0.35);}
+.app-card .c-title{color:var(--green);}
+.aitem{
+  display:flex;gap:8px;align-items:flex-start;
+  margin-bottom:10px;font-size:12px;line-height:1.55;color:var(--text-mid);
+  animation:fadeUp 0.45s ease both;
+}
+.aitem:last-child{margin-bottom:0;}
+.adot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px;box-shadow:0 0 6px var(--green-hi);}
+
+/* fix */
+.fix-card{border-color:rgba(75,158,255,0.2);}
+.fix-card:hover{border-color:rgba(75,158,255,0.35);}
+.fix-card .c-title{color:var(--blue);}
+.fitem{
+  display:flex;gap:8px;align-items:flex-start;
+  margin-bottom:10px;font-size:12px;line-height:1.55;color:var(--text-mid);
+  animation:fadeUp 0.45s ease both;
+}
+.fitem:last-child{margin-bottom:0;}
+.fnum{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;width:16px;}
+
+.stagger-1{animation-delay:0.05s;}
+.stagger-2{animation-delay:0.12s;}
+.stagger-3{animation-delay:0.19s;}
+@keyframes popIn{from{opacity:0;transform:scale(0.85) translateY(6px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* metrics */
+#metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.metric{background:var(--bg);padding:16px 18px;}
+.m-lbl{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px;}
+.m-val{font-family:var(--mono);font-size:26px;font-weight:700;margin-bottom:6px;line-height:1;transition:color 0.5s;}
+.m-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+.m-fill{height:100%;border-radius:2px;width:0%;transition:width 1s cubic-bezier(0.4,0,0.2,1);}
+
+/* share card */
+#share-sec{padding:20px 18px 24px;}
+#share-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px;}
+#share-card{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:14px;padding:18px;margin-bottom:12px;
+  max-width:460px;position:relative;overflow:hidden;
+}
+#share-card::before{
+  content:'';position:absolute;top:-30px;right:-30px;
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(180,110,255,0.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.sc-hd{display:flex;justify-content:space-between;margin-bottom:12px;}
+.sc-brand{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);opacity:0.55;}
+#sc-score{font-family:var(--mono);font-size:40px;font-weight:700;line-height:1;letter-spacing:-1.5px;margin-bottom:2px;}
+.sc-den{font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+#sc-level{font-size:13px;font-weight:700;margin-bottom:10px;}
+.sc-div{height:1px;background:rgba(255,255,255,0.07);margin:10px 0;}
+.sc-q{font-size:10px;color:var(--text-mid);line-height:1.55;font-style:italic;}
+#sc-foot{font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-top:10px;}
+#share-acts{display:flex;gap:8px;flex-wrap:wrap;}
+.shr-btn{
+  padding:8px 18px;border-radius:8px;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text-mid);font-family:var(--sans);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all 0.15s;
+}
+.shr-btn:hover{color:var(--text);background:var(--surface);border-color:var(--border2);}
+.shr-btn.primary{background:linear-gradient(135deg,var(--purple),var(--blue));border-color:transparent;color:#fff;}
+.shr-btn.primary:hover{opacity:0.9;transform:translateY(-1px);}
+
+/* ══════════════════════════════════════════════
+   STAKEHOLDER RECORDER PANEL
+══════════════════════════════════════════════ */
+#recorder-panel{
+  position:fixed;top:var(--nav);right:0;bottom:var(--bar);
+  width:380px;
+  background:var(--bg-lighter);
+  border-left:1px solid var(--border);
+  z-index:250;
+  transform:translateX(100%);
+  transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+#recorder-panel.open{transform:translateX(0);}
+
+#rec-header{
+  flex-shrink:0;
+  padding:18px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.rec-title{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;font-weight:700;
+}
+.rec-title-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--text-dim);transition:background 0.2s;
+}
+.rec-active .rec-title-dot{background:var(--orange);animation:recPulse 1s ease-in-out infinite;}
+#rec-close{
+  width:28px;height:28px;border-radius:6px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text-mid);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;
+}
+#rec-close:hover{border-color:var(--border2);color:var(--text);}
+
+/* visualizer */
+#rec-viz{
+  flex-shrink:0;
+  height:80px;
+  display:flex;align-items:center;justify-content:center;
+  gap:3px;
+  padding:0 20px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.viz-bar{
+  width:3px;border-radius:2px;
+  background:var(--orange-dim);
+  height:20px;
+  transition:height 0.1s ease;
+}
+
+/* timer */
+#rec-timer{
+  font-family:var(--mono);font-size:28px;font-weight:700;
+  text-align:center;padding:14px 20px 8px;color:var(--text);letter-spacing:1px;
+}
+#rec-status{
+  font-family:var(--mono);font-size:10px;text-align:center;
+  color:var(--text-dim);padding:0 20px 14px;letter-spacing:1px;
+}
+
+/* controls */
+#rec-controls{
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;padding:0 20px 16px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.rec-btn{
+  height:40px;padding:0 20px;border-radius:8px;
+  border:1px solid var(--border2);background:var(--surface);
+  color:var(--text-mid);font-family:var(--sans);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:7px;
+}
+.rec-btn:hover{color:var(--text);background:var(--surface2);}
+.rec-btn.primary{background:var(--orange);border-color:var(--orange);color:#fff;}
+.rec-btn.primary:hover{background:#ff7a55;}
+.rec-btn.stop{background:rgba(255,101,64,0.15);border-color:var(--orange);color:var(--orange);}
+.rec-btn.stop:hover{background:rgba(255,101,64,0.25);}
+.rec-btn:disabled{opacity:0.35;cursor:not-allowed;}
+
+/* analyse button */
+#rec-analyse-btn{
+  margin:0 20px 12px;
+  height:40px;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  border:none;border-radius:8px;
+  color:#081A0E;font-family:var(--sans);font-size:13px;font-weight:800;
+  cursor:pointer;transition:all 0.18s;width:calc(100% - 40px);
+}
+#rec-analyse-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(30,224,122,0.25);}
+#rec-analyse-btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;box-shadow:none;background:var(--surface2);color:var(--text-dim);}
+
+/* transcript */
+#rec-transcript-wrap{
+  flex:1;overflow-y:auto;padding:0 20px 16px;
+  min-height:0;
+}
+#rec-transcript-wrap::-webkit-scrollbar{width:3px;}
+.transcript-empty{
+  padding:24px 0;text-align:center;
+  font-family:var(--mono);font-size:11px;color:var(--text-dim);
+  line-height:1.8;
+}
+
+/* insight cards */
+.insight-card{
+  margin-bottom:10px;
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:12px;line-height:1.55;
+  animation:fadeUp 0.35s ease both;
+}
+.insight-card.take{
+  background:var(--green-dim);
+  border:1px solid rgba(30,224,122,0.25);
+  color:var(--text);
+}
+.insight-card.ignore{
+  background:var(--orange-dim);
+  border:1px solid rgba(255,101,64,0.2);
+  color:var(--text-mid);
+}
+.insight-card.neutral{
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text-mid);
+}
+.insight-tag{
+  font-family:var(--mono);font-size:8px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:5px;display:flex;align-items:center;gap:5px;
+}
+.insight-card.take   .insight-tag{color:var(--green);}
+.insight-card.ignore .insight-tag{color:var(--orange);}
+.insight-card.neutral .insight-tag{color:var(--text-dim);}
+
+/* raw transcript segment */
+.trans-seg{
+  margin-bottom:6px;padding:8px 12px;
+  background:var(--bg);border-radius:7px;
+  border-left:2px solid var(--border);
+  font-size:11px;color:var(--text-mid);line-height:1.5;
+  font-style:italic;
+}
+
+/* ══════════════════════════════════════════════
+   SCAN OVERLAY
+══════════════════════════════════════════════ */
+#scan-overlay{
+  position:fixed;inset:0;top:var(--nav);bottom:var(--bar);
+  background:rgba(19,21,28,0.88);backdrop-filter:blur(8px);
+  z-index:400;display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:20px;
+}
+#scan-overlay.on{display:flex;}
+#scan-face-wrap{position:relative;}
+#scan-halo{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle,rgba(180,110,255,0.22) 0%,transparent 70%);
+  animation:scanHalo 1.5s ease-in-out infinite alternate;
+}
+@keyframes scanHalo{
+  from{transform:translate(-50%,-50%) scale(0.9);opacity:0.5;}
+  to{transform:translate(-50%,-50%) scale(1.2);opacity:1;}
+}
+#scan-spin{
+  width:42px;height:42px;border-radius:50%;
+  border:2px solid rgba(180,110,255,0.2);
+  border-top-color:var(--purple);
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+#scan-msg{font-size:16px;font-weight:700;color:var(--text);text-align:center;max-width:300px;line-height:1.4;}
+#scan-sub{font-family:var(--mono);font-size:10px;color:var(--text-mid);text-align:center;letter-spacing:0.3px;}
+.scan-dots{display:flex;gap:6px;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:dp 1.2s ease-in-out infinite;}
+.sdot:nth-child(2){animation-delay:0.2s;}.sdot:nth-child(3){animation-delay:0.4s;}
+@keyframes dp{0%,100%{opacity:0.3;transform:scale(0.8);}50%{opacity:1;transform:scale(1.2);}}
+
+/* ══════════════════════════════════════════════
+   BOTTOM BAR (app screen only)
+══════════════════════════════════════════════ */
+#bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:var(--bar);padding:0 18px;
+  background:rgba(19,21,28,0.97);backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+#bar.landing-hidden{display:none;}
+#bar-prog{
+  position:absolute;top:-1px;left:0;height:2px;
+  background:linear-gradient(to right,var(--purple),var(--blue));
+  width:0%;transition:width 0.1s linear;border-radius:0 1px 1px 0;
+}
+.bu{
+  position:relative;border:1px solid var(--border2);border-radius:8px;
+  height:40px;padding:0 14px;
+  display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;
+  min-width:136px;transition:all 0.18s;
+}
+.bu:hover{border-color:var(--purple-hi);background:var(--purple-dim);}
+.bu.active{border-color:var(--green);background:var(--green-dim);}
+.bu input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.bu span{font-size:11px;font-weight:600;color:var(--text-mid);white-space:nowrap;}
+.bu span b{color:var(--text);}
+.bdiv{width:1px;height:22px;background:var(--border);flex-shrink:0;}
+.bpaste{flex:1;min-width:0;}
+.bpaste textarea{
+  width:100%;height:40px;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:var(--sans);font-size:12px;
+  padding:9px 14px;resize:none;outline:none;transition:border-color 0.15s;line-height:1.3;
+}
+.bpaste textarea:focus{border-color:rgba(180,110,255,0.5);}
+.bpaste textarea::placeholder{color:var(--text-dim);}
+.igrp{display:flex;gap:4px;flex-shrink:0;}
+.ipill{
+  padding:5px 10px;border-radius:100px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text-dim);font-family:var(--sans);font-size:11px;
+  cursor:pointer;transition:all 0.15s;
+}
+.ipill:hover{border-color:var(--border2);color:var(--text);}
+.ipill.on{background:var(--orange-dim);border-color:rgba(255,101,64,0.4);color:var(--orange);}
+#cta{
+  height:40px;padding:0 22px;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  border:none;border-radius:8px;
+  color:#081A0E;font-family:var(--sans);font-size:13px;font-weight:800;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:all 0.18s;
+  box-shadow:0 0 18px rgba(30,224,122,0.2);
+}
+#cta:hover{transform:translateY(-1px);box-shadow:0 4px 24px rgba(30,224,122,0.3);}
+#cta:active{transform:none;}
+#cta:disabled{opacity:0.3;cursor:not-allowed;transform:none;box-shadow:none;background:var(--surface2);color:var(--text-dim);}
+.bsample{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text-dim);cursor:pointer;background:none;border:none;white-space:nowrap;flex-shrink:0;transition:color 0.15s;}
+.bsample:hover{color:var(--purple);}
+.back-btn{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--text-dim);cursor:pointer;background:none;border:1px solid var(--border);
+  border-radius:6px;padding:5px 10px;flex-shrink:0;transition:all 0.15s;
+}
+.back-btn:hover{color:var(--text);border-color:var(--border2);}
+
+/* ══════════════════════════════════════════════
+   FACE BLINK
+══════════════════════════════════════════════ */
+@keyframes eyeBlink{0%,100%{transform:scaleY(1);}50%{transform:scaleY(0.05);}}
+.blinking{animation:eyeBlink 0.12s ease-in-out;}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:calc(var(--bar) + 14px);left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:var(--surface2);border:1px solid var(--border2);
+  padding:8px 18px;border-radius:8px;font-size:12px;font-weight:600;
+  color:var(--text);opacity:0;transition:all 0.22s;pointer-events:none;z-index:500;white-space:nowrap;
+}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* CONFETTI */
+.cf{position:fixed;pointer-events:none;z-index:600;animation:cfFall linear forwards;}
+@keyframes cfFall{from{opacity:1;transform:translateY(-10px) rotate(0);}to{opacity:0;transform:translateY(100vh) rotate(720deg);}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">
+    <div class="nav-dot"></div>
+    PRD<span>Roast</span>
+  </div>
+  <div class="nav-right">
+    <button id="nav-record-btn" onclick="toggleRecorderPanel()" style="display:none;">
+      <div class="rec-dot"></div>
+      Stakeholder Review
+    </button>
+    <div id="nav-badge"></div>
+  </div>
+</nav>
+
+<!-- ══ SCREEN 1: LANDING ════════════════════════════════ -->
+<div class="screen" id="screen-landing">
+  <div class="landing-eyebrow">AI-Powered PRD Review</div>
+
+  <h1 class="landing-h1">
+    Upload your PRD.<br>
+    Get <em>roasted</em>.<br>
+    Maybe respected.
+  </h1>
+
+  <p class="landing-sub">
+    Because <b>"LGTM"</b> is not feedback.<br>
+    And vague requirements deserve brutal clarity.
+  </p>
+
+  <div class="intensity-section">
+    <span class="intensity-label">Roast Level</span>
+    <button class="int-pill" data-lv="mild" onclick="setLandingIntensity(this)">😇 Mild</button>
+    <button class="int-pill on" data-lv="spicy" onclick="setLandingIntensity(this)">🌶 Spicy</button>
+    <button class="int-pill" data-lv="savage" onclick="setLandingIntensity(this)">😈 Savage</button>
+  </div>
+
+  <div class="upload-box" id="landing-upload">
+    <input type="file" accept=".pdf,.doc,.docx,.txt" onchange="onLandingFile(this.files[0])">
+    <span class="upload-icon">📄</span>
+    <div class="upload-title" id="landing-upload-title">Drop your PRD here</div>
+    <div class="upload-sub">Drag & drop or <span>click to browse</span></div>
+    <div class="upload-file-types">
+      <span class="ft-tag">PDF</span>
+      <span class="ft-tag">DOC</span>
+      <span class="ft-tag">DOCX</span>
+      <span class="ft-tag">TXT</span>
+    </div>
+  </div>
+
+  <div class="upload-or">— or paste text —</div>
+
+  <div class="landing-paste">
+    <textarea id="landing-paste-ta" placeholder="Paste your PRD here…&#10;&#10;Reading between your vague lines is our speciality." oninput="onLandingPaste()" rows="4"></textarea>
+    <div class="paste-footer">
+      <span class="paste-char" id="paste-char">0 characters</span>
+      <button class="paste-sample-btn" onclick="loadLandingSample()">Load sample PRD →</button>
+    </div>
+  </div>
+
+  <button id="landing-cta" disabled onclick="runFromLanding()">🔥 Roast My PRD</button>
+
+  <div class="feature-tags">
+    <div class="feat-tag">🔥 Savage Roast</div>
+    <div class="feat-tag">👏 Real Applause</div>
+    <div class="feat-tag">🛠 Actionable Fixes</div>
+    <div class="feat-tag">🎤 Stakeholder Recorder</div>
+    <div class="feat-tag">🏅 PM Level Badge</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: APP ════════════════════════════════════ -->
+<div class="screen hidden" id="screen-app">
+
+  <!-- LEFT: LEVEL LADDER -->
+  <div id="left">
+    <div id="left-hdr">PM Level</div>
+    <!-- cards injected by JS -->
+    <div id="xp-box">
+      <div id="xp-row">
+        <span id="xp-lbl">Score</span>
+        <span id="xp-num">— <span>/ 100</span></span>
+      </div>
+      <div id="xp-track"><div id="xp-fill"></div></div>
+      <div id="xp-hint">Your score will appear here.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: CONTENT -->
+  <div id="right">
+    <!-- top score bar -->
+    <div id="top-bar">
+      <div id="face-wrap">
+        <div id="face-halo"></div>
+        <svg id="face-svg" width="72" height="72" viewBox="0 0 72 72" fill="none">
+          <circle id="fc" cx="36" cy="36" r="30" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+          <circle id="fg" cx="36" cy="36" r="33" stroke="transparent" stroke-width="1.5" opacity="0"/>
+          <ellipse id="fe-l" cx="25" cy="31" rx="3.5" ry="3.5" fill="rgba(255,255,255,0.85)"/>
+          <ellipse id="fe-r" cx="47" cy="31" rx="3.5" ry="3.5" fill="rgba(255,255,255,0.85)"/>
+          <path id="fb-l" d="M19 23 Q25 20 31 23" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path id="fb-r" d="M41 23 Q47 20 53 23" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path id="fm" d="M22 50 Q36 58 50 50" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <g id="fx" opacity="0">
+            <line x1="21" y1="27" x2="29" y2="35" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="29" y1="27" x2="21" y2="35" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="43" y1="27" x2="51" y2="35" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="51" y1="27" x2="43" y2="35" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round"/>
+          </g>
+          <g id="fck" opacity="0">
+            <path d="M22 16 L27 6 L36 12 L45 6 L50 16 Z" fill="rgba(255,214,10,0.65)" stroke="rgba(255,214,10,0.9)" stroke-width="1" stroke-linejoin="round"/>
+            <circle cx="27" cy="6" r="2" fill="rgba(255,214,10,0.9)"/>
+            <circle cx="36" cy="12" r="2" fill="rgba(255,214,10,0.9)"/>
+            <circle cx="45" cy="6" r="2" fill="rgba(255,214,10,0.9)"/>
+          </g>
+        </svg>
+      </div>
+      <div id="score-block">
+        <div id="score-num">—</div>
+        <div id="score-sub">out of 100</div>
+      </div>
+      <div id="lvl-block">
+        <div id="lvl-tag">—</div>
+        <div id="lvl-name">—</div>
+        <div id="lvl-micro">—</div>
+      </div>
+    </div>
+
+    <!-- scrollable results -->
+    <div id="rscroll">
+      <div id="section-audit"></div>
+      <div id="card-cols">
+        <div class="c-card roast-card" onmouseenter="modFace('roast')" onmouseleave="modFace('base')">
+          <div class="c-head"><span class="c-icon">🔥</span><span class="c-title">Roast</span></div>
+          <div id="roast-items"></div>
+        </div>
+        <div class="c-card app-card" onmouseenter="modFace('applause')" onmouseleave="modFace('base')">
+          <div class="c-head"><span class="c-icon">👏</span><span class="c-title">Applause</span></div>
+          <div id="app-items"></div>
+        </div>
+        <div class="c-card fix-card">
+          <div class="c-head"><span class="c-icon">🛠</span><span class="c-title">Fix This</span></div>
+          <div id="fix-items"></div>
+        </div>
+      </div>
+
+      <div id="metrics">
+        <div class="metric"><div class="m-lbl">Clarity</div><div class="m-val" id="mv-c" style="color:#FFD60A">—</div><div class="m-bar"><div class="m-fill" id="mf-c" style="background:#FFD60A"></div></div><div class="m-reason" id="mr-c"></div></div>
+        <div class="metric"><div class="m-lbl">Structure</div><div class="m-val" id="mv-s" style="color:#4B9EFF">—</div><div class="m-bar"><div class="m-fill" id="mf-s" style="background:#4B9EFF"></div></div><div class="m-reason" id="mr-s"></div></div>
+        <div class="metric"><div class="m-lbl">Prod. Thinking</div><div class="m-val" id="mv-t" style="color:#1EE07A">—</div><div class="m-bar"><div class="m-fill" id="mf-t" style="background:#1EE07A"></div></div><div class="m-reason" id="mr-t"></div></div>
+        <div class="metric"><div class="m-lbl">Completeness</div><div class="m-val" id="mv-co" style="color:#FF6540">—</div><div class="m-bar"><div class="m-fill" id="mf-co" style="background:#FF6540"></div></div><div class="m-reason" id="mr-co"></div></div>
+      </div>
+
+      <!-- Score improvement guide — shown only when score < 75 -->
+      <div id="score-guide"></div>
+
+      <div id="share-sec">
+        <div id="share-lbl">Your Badge</div>
+        <div id="share-card">
+          <div class="sc-hd"><span class="sc-brand">PRD Roast</span></div>
+          <div id="sc-score">—</div>
+          <div class="sc-den">out of 100</div>
+          <div id="sc-level">—</div>
+          <div class="sc-div"></div>
+          <div class="sc-q" id="sc-r">—</div>
+          <div class="sc-q" id="sc-a" style="margin-top:6px">—</div>
+          <div class="sc-div"></div>
+          <div id="sc-foot">Reviewed by Brutal PM AI</div>
+        </div>
+        <div id="share-acts">
+          <button class="shr-btn" onclick="doCopy()">Copy</button>
+          <button class="shr-btn" onclick="doShare()">Share ↗</button>
+          <button class="shr-btn primary" onclick="doDownload()">Download PNG</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STAKEHOLDER RECORDER PANEL ═══════════════════════ -->
+<div id="recorder-panel">
+  <div id="rec-header">
+    <div class="rec-title" id="rec-title-el">
+      <div class="rec-title-dot" id="rec-dot"></div>
+      Stakeholder Review
+    </div>
+    <button id="rec-close" onclick="toggleRecorderPanel()">✕</button>
+  </div>
+
+  <div id="rec-viz">
+    <!-- 20 bars injected by JS -->
+  </div>
+
+  <div id="rec-timer">00:00</div>
+  <div id="rec-status">Press Record to start capturing the review</div>
+
+  <div id="rec-controls">
+    <button class="rec-btn primary" id="rec-start-btn" onclick="startRecording()">⏺ Record</button>
+    <button class="rec-btn stop" id="rec-stop-btn" onclick="stopRecording()" disabled>⏹ Stop</button>
+    <button class="rec-btn" id="rec-clear-btn" onclick="clearRecording()">✕ Clear</button>
+  </div>
+
+  <button id="rec-analyse-btn" onclick="analyseRecording()" disabled>
+    🧠 Analyse — What to Take & Ignore
+  </button>
+
+  <div id="rec-transcript-wrap">
+    <div class="transcript-empty" id="rec-empty-msg">
+      🎤 Record a stakeholder review session.<br>
+      We'll tell you what feedback to take seriously<br>
+      and what to politely ignore.
+    </div>
+    <div id="rec-insights"></div>
+    <div id="rec-raw"></div>
+  </div>
+</div>
+
+<!-- SCAN OVERLAY -->
+<div id="scan-overlay">
+  <div id="scan-face-wrap">
+    <div id="scan-halo"></div>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="position:relative;z-index:1;">
+      <circle cx="40" cy="40" r="32" stroke="rgba(180,110,255,0.2)" stroke-width="1.5"/>
+      <ellipse cx="29" cy="35" rx="4" ry="4" fill="rgba(255,255,255,0.8)"/>
+      <ellipse cx="51" cy="35" rx="4" ry="4" fill="rgba(255,255,255,0.8)"/>
+      <path d="M26 50 Q40 44 54 50" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M26 27 Q29 24 33 26" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M47 26 Q51 24 54 27" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div id="scan-spin"></div>
+  <div id="scan-msg">Reading between your vague lines…</div>
+  <div id="scan-sub">Narrator: the lines were very vague.</div>
+  <div class="scan-dots">
+    <div class="sdot"></div><div class="sdot"></div><div class="sdot"></div>
+  </div>
+</div>
+
+<!-- BOTTOM BAR (only visible on app screen) -->
+<div id="bar" class="landing-hidden">
+  <div id="bar-prog"></div>
+  <div class="bu" id="upload-zone">
+    <input type="file" accept=".pdf,.doc,.docx,.txt" onchange="onAppFile(this.files[0])">
+    <span id="upload-lbl"><b>Upload</b> PRD</span>
+  </div>
+  <div class="bdiv"></div>
+  <div class="bpaste">
+    <textarea id="bar-paste-ta" placeholder="…or paste another PRD to re-analyse" oninput="onBarPaste()"></textarea>
+  </div>
+  <div class="bdiv"></div>
+  <div class="igrp">
+    <button class="ipill" data-lv="mild" onclick="setBarIntensity(this)">😇</button>
+    <button class="ipill on" data-lv="spicy" onclick="setBarIntensity(this)">🌶</button>
+    <button class="ipill" data-lv="savage" onclick="setBarIntensity(this)">😈</button>
+  </div>
+  <button id="cta" onclick="run()" disabled>Re-Roast →</button>
+  <button class="bsample" onclick="loadBarSample()">sample</button>
+  <button class="back-btn" onclick="goToLanding()">← Back</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════
+   CONSTANTS & STATE
+════════════════════════════════════════════ */
+const API = 'https://api.anthropic.com/v1/messages';
+
+const LEVELS = [
+  { id:'god',      name:'PM God Mode',    range:[85,100], emoji:'👑', col:'#B46EFF', iconBg:'rgba(180,110,255,0.2)', wit:'"You don\'t write PRDs. You drop commandments."', xc1:'#B46EFF', xc2:'#7C3AED', footer:'Ascended. Survived the roast. 🌟' },
+  { id:'senior',   name:'Senior PM',      range:[70, 84], emoji:'🧠', col:'#4B9EFF', iconBg:'rgba(75,158,255,0.2)',  wit:'"Clarity thodi aur hoti toh promotion pakka tha."', xc1:'#4B9EFF', xc2:'#1EE07A', footer:'Almost at the top. Keep climbing.' },
+  { id:'shipping', name:'Shipping Soon™', range:[55, 69], emoji:'🚧', col:'#1EE07A', iconBg:'rgba(30,224,122,0.18)', wit:'"Almost there. Thinking ko aur push karo."', xc1:'#1EE07A', xc2:'#FFD60A', footer:'Reviewed by Brutal PM AI' },
+  { id:'intern',   name:'Intern Energy',  range:[40, 54], emoji:'🧃', col:'#FFD60A', iconBg:'rgba(255,214,10,0.18)', wit:'"PRD kam, wishful thinking zyada."', xc1:'#FFD60A', xc2:'#FF6540', footer:'Reviewed by Brutal PM AI' },
+  { id:'beta',     name:'Beta School',    range:[ 0, 39], emoji:'💀', col:'#FF6540', iconBg:'rgba(255,101,64,0.18)', wit:'"Yeh PRD nahi, assignment lag raha hai."', xc1:'#FF6540', xc2:'#FF0000', footer:'Reviewed by Brutal PM AI 💀' },
+];
+
+const MICRO_MAP = [
+  [85,'Metrics so clean, engineers actually smiled.'],
+  [80,'Stakeholders will listen. And take notes.'],
+  [70,'Clarity thodi aur hoti toh promotion pakka tha.'],
+  [60,'Effort visible. Clarity negotiable.'],
+  [55,'Almost there. Thinking ko aur push karo.'],
+  [45,'PRD kam, wishful thinking zyada.'],
+  [40,'Metrics missing. Confidence high.'],
+  [25,'Yeh PRD nahi, assignment lag raha hai.'],
+  [0, 'Engineering team is updating their LinkedIn.'],
+];
+
+const SCAN_MSGS = [
+  ['Reading between your vague lines…',     'Narrator: the lines were very vague.'],
+  ['Scanning for success metrics…',         'Found: vibes. Not found: KPIs.'],
+  ['Checking user personas…',              'Population: assumed. Classic.'],
+  ['Counting "seamless experience" uses…', 'It was 4. Drinking game triggered.'],
+  ['Consulting senior PMs…',              'They all have opinions. Simultaneously.'],
+  ['Running completeness check…',         'Engineers are already afraid.'],
+];
+
+let intensity    = 'spicy';
+let prdText      = '';
+let lastResult   = null;
+let currentScore = null;
+let aCtx         = null;
+let scanInterval, progInterval, msgIdx = 0;
+
+/* ════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════ */
+const $  = id => document.getElementById(id);
+const getLevel = s => LEVELS.find(l => s >= l.range[0] && s <= l.range[1]) || LEVELS[4];
+const getMicro = s => { for (const [t,tx] of MICRO_MAP) if (s>=t) return tx; return MICRO_MAP[MICRO_MAP.length-1][1]; };
+
+/* ════════════════════════════════════════════
+   SCREEN MANAGEMENT
+════════════════════════════════════════════ */
+function showApp() {
+  $('screen-landing').classList.add('hidden');
+  $('screen-app').classList.remove('hidden');
+  $('bar').classList.remove('landing-hidden');
+  $('nav-record-btn').style.display = 'flex';
+  buildLadder();
+}
+function goToLanding() {
+  $('screen-app').classList.add('hidden');
+  $('screen-landing').classList.remove('hidden');
+  $('bar').classList.add('landing-hidden');
+  $('nav-record-btn').style.display = 'none';
+  $('recorder-panel').classList.remove('open');
+}
+
+/* ════════════════════════════════════════════
+   LANDING INPUT
+════════════════════════════════════════════ */
+function setLandingIntensity(btn) {
+  document.querySelectorAll('.int-pill').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  intensity = btn.dataset.lv;
+  // sync bar pills
+  document.querySelectorAll('.ipill').forEach(b=>b.classList.remove('on'));
+  document.querySelector(`.ipill[data-lv="${intensity}"]`)?.classList.add('on');
+}
+
+function onLandingFile(file) {
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    prdText = e.target.result.substring(0,4000);
+    $('landing-upload-title').textContent = file.name.substring(0,30);
+    $('landing-upload').style.borderColor = 'var(--green)';
+    $('landing-upload').style.background = 'var(--bg-lighter)';
+    $('landing-cta').disabled = false;
+  };
+  r.readAsText(file);
+}
+
+function onLandingPaste() {
+  const v = $('landing-paste-ta').value;
+  prdText = v;
+  $('paste-char').textContent = v.length.toLocaleString() + ' characters';
+  $('landing-cta').disabled = v.trim().length < 20;
+}
+
+function loadLandingSample() {
+  $('landing-paste-ta').value = SAMPLE;
+  prdText = SAMPLE;
+  $('paste-char').textContent = SAMPLE.length.toLocaleString() + ' characters';
+  $('landing-cta').disabled = false;
+}
+
+async function runFromLanding() {
+  if (!prdText.trim()) return;
+  showApp();
+  await doAnalysis();
+}
+
+// Drag on landing upload
+const lu = $('landing-upload');
+lu.addEventListener('dragover', e=>{e.preventDefault();lu.classList.add('drag');});
+lu.addEventListener('dragleave',()=>lu.classList.remove('drag'));
+lu.addEventListener('drop',e=>{e.preventDefault();lu.classList.remove('drag');if(e.dataTransfer.files[0])onLandingFile(e.dataTransfer.files[0]);});
+
+/* ════════════════════════════════════════════
+   APP BAR INPUT
+════════════════════════════════════════════ */
+function setBarIntensity(btn) {
+  document.querySelectorAll('.ipill').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  intensity = btn.dataset.lv;
+}
+
+function onAppFile(file) {
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    prdText = e.target.result.substring(0,4000);
+    $('upload-lbl').innerHTML = `<b>${file.name.substring(0,22)}</b> ✓`;
+    $('upload-zone').classList.add('active');
+    $('cta').disabled = false;
+  };
+  r.readAsText(file);
+}
+
+function onBarPaste() {
+  prdText = $('bar-paste-ta').value;
+  $('cta').disabled = prdText.trim().length < 20;
+}
+
+function loadBarSample() {
+  prdText = SAMPLE;
+  $('bar-paste-ta').value = prdText;
+  $('cta').disabled = false;
+}
+
+async function run() {
+  if (!prdText.trim()) { toast('Paste or upload a PRD first.'); return; }
+  await doAnalysis();
+}
+
+/* ════════════════════════════════════════════
+   LEVEL LADDER
+════════════════════════════════════════════ */
+function buildLadder() {
+  const left = $('left');
+  left.querySelectorAll('.lvl-card').forEach(c=>c.remove());
+  const xp = $('xp-box');
+  LEVELS.forEach(l => {
+    const card = document.createElement('div');
+    card.className = 'lvl-card future';
+    card.id = 'lvl-' + l.id;
+    card.style.setProperty('--lc', l.col);
+    card.style.setProperty('--li', l.iconBg);
+    card.innerHTML = `
+      <div class="lvl-top">
+        <div class="lvl-icon">${l.emoji}</div>
+        <div><div class="lvl-name">${l.name}</div><div class="lvl-range">${l.range[0]}–${l.range[1]}</div></div>
+      </div>
+      <div class="lvl-wit">${l.wit}</div>`;
+    left.insertBefore(card, xp);
+  });
+}
+
+function animateLadder(score) {
+  const ai = LEVELS.findIndex(l => score >= l.range[0] && score <= l.range[1]);
+  LEVELS.forEach((l,i)=>{
+    const c = $('lvl-'+l.id);
+    if (!c) return;
+    c.classList.remove('past','active','future');
+    c.style.setProperty('--lc', l.col);
+    c.style.setProperty('--li', l.iconBg);
+    if (i < ai) c.classList.add('past');
+    else if (i === ai) c.classList.add('active');
+    else c.classList.add('future');
+  });
+  const lvl = getLevel(score);
+  const xf = $('xp-fill');
+  xf.style.background = `linear-gradient(to right,${lvl.xc1},${lvl.xc2})`;
+  xf.style.boxShadow = `0 0 10px ${lvl.col}55`;
+  $('xp-num').innerHTML = `${score} <span>/ 100</span>`;
+  setTimeout(()=>{ xf.style.width = score+'%'; }, 120);
+  if (ai === 0) $('xp-hint').innerHTML = 'Max level. You are the benchmark.';
+  else { const n=LEVELS[ai-1]; $('xp-hint').innerHTML = `+${n.range[0]-score} pts → <b>${n.name}</b>`; }
+  setTimeout(()=>{ const ac=document.querySelector('.lvl-card.active'); if(ac) ac.scrollIntoView({behavior:'smooth',block:'nearest'}); },400);
+}
+
+/* ════════════════════════════════════════════
+   PM FACE
+════════════════════════════════════════════ */
+const FM={
+  dead:  'M22 52 Q36 48 50 52', weird:'M22 50 Q28 56 36 50 Q44 44 50 50',
+  slight:'M22 50 Q36 54 50 50', smile:'M22 50 Q36 58 50 50',
+  wide:  'M20 49 Q36 60 52 49', smirk:'M22 50 Q30 48 36 51 Q42 54 50 50',
+  open:  'M22 50 Q36 60 50 50'
+};
+function setFace(score, mod) {
+  const e = id=>document.getElementById(id), lvl=getLevel(score);
+  e('fx').setAttribute('opacity','0');e('fck').setAttribute('opacity','0');
+  e('fg').setAttribute('opacity','0');
+  e('fe-l').setAttribute('opacity','1');e('fe-r').setAttribute('opacity','1');
+  e('fc').setAttribute('stroke','rgba(255,255,255,0.12)');
+  $('face-halo').style.background=`radial-gradient(circle,${lvl.col}30 0%,transparent 70%)`;
+  if(mod==='roast'){e('fm').setAttribute('d',FM.smirk);e('fb-l').setAttribute('d','M19 22 Q25 18 29 22');e('fb-r').setAttribute('d','M43 20 Q47 22 53 22');return;}
+  if(mod==='applause'){e('fm').setAttribute('d',FM.open);e('fb-l').setAttribute('d','M19 24 Q25 21 31 24');e('fb-r').setAttribute('d','M41 24 Q47 21 53 24');return;}
+  e('fc').setAttribute('stroke',lvl.col+'30');
+  if(score<40){e('fe-l').setAttribute('opacity','0');e('fe-r').setAttribute('opacity','0');e('fx').setAttribute('opacity','1');e('fm').setAttribute('d',FM.dead);e('fb-l').setAttribute('d','M19 24 Q25 27 31 24');e('fb-r').setAttribute('d','M41 24 Q47 27 53 24');}
+  else if(score<55){e('fm').setAttribute('d',FM.weird);e('fb-l').setAttribute('d','M19 23 Q23 20 27 24');e('fb-r').setAttribute('d','M45 24 Q49 20 53 23');}
+  else if(score<70){e('fm').setAttribute('d',FM.slight);e('fb-l').setAttribute('d','M19 23 Q25 20 31 23');e('fb-r').setAttribute('d','M41 23 Q47 20 53 23');}
+  else if(score<85){e('fm').setAttribute('d',FM.smile);e('fb-l').setAttribute('d','M19 22 Q25 19 31 22');e('fb-r').setAttribute('d','M41 22 Q47 19 53 22');}
+  else{e('fm').setAttribute('d',FM.wide);e('fb-l').setAttribute('d','M17 21 Q25 17 33 21');e('fb-r').setAttribute('d','M39 21 Q47 17 55 21');e('fck').setAttribute('opacity','1');e('fg').setAttribute('stroke',lvl.col);e('fg').setAttribute('opacity','0.45');e('fc').setAttribute('stroke',lvl.col+'50');}
+}
+function modFace(state){if(currentScore===null)return;if(state==='base')setFace(currentScore);else setFace(currentScore,state);}
+
+let blinkT;
+function scheduleBlink(){
+  clearTimeout(blinkT);
+  blinkT=setTimeout(()=>{
+    const l=$('fe-l'),r=$('fe-r');
+    if(!l||!r||(currentScore!==null&&currentScore<40)){scheduleBlink();return;}
+    l.classList.add('blinking');r.classList.add('blinking');
+    setTimeout(()=>{l.classList.remove('blinking');r.classList.remove('blinking');scheduleBlink();},200);
+  },2800+Math.random()*2200);
+}
+scheduleBlink();
+
+/* ════════════════════════════════════════════
+   RENDER RESULTS
+════════════════════════════════════════════ */
+function renderResults(data) {
+  const s=Math.round(data.overallScore), lvl=getLevel(s);
+  currentScore=s;
+  setTimeout(()=>setFace(s),150);
+
+  // Score + level
+  const sn=$('score-num');sn.textContent=s;sn.style.color=lvl.col;
+  const lt=$('lvl-tag');lt.textContent=lvl.name;lt.style.borderColor=lvl.col+'50';lt.style.color=lvl.col;lt.style.background=lvl.iconBg;
+  $('lvl-name').textContent=`${lvl.emoji} ${lvl.name}`;$('lvl-name').style.color=lvl.col;
+  $('lvl-micro').textContent=getMicro(s);
+
+  // Section audit strip
+  const auditEl = $('section-audit');
+  if (auditEl) {
+    const found   = data.sectionsFound   || [];
+    const missing = data.sectionsMissing || [];
+    const ALL_SECTIONS = ['Problem Statement','User Persona','Goals / Metrics','Features / Scope','User Flows','Edge Cases','Assumptions'];
+    const chips = ALL_SECTIONS.map(sec => {
+      const key = sec.split('/')[0].trim().toLowerCase();
+      const isFound = found.some(f => f.toLowerCase().includes(key));
+      const icon  = isFound ? '✓' : '✗';
+      const state = isFound ? 'found' : 'missing';
+      return `<div class="audit-chip ${state}">${icon} ${sec}</div>`;
+    }).join('');
+    auditEl.innerHTML = `<div class="audit-label">Section Audit</div><div class="audit-chips">${chips}</div>`;
+    auditEl.classList.add('has-data');
+  }
+
+  // Content cards
+  $('roast-items').innerHTML=(data.roasts||[]).map((r,i)=>`<div class="rbubble stagger-${Math.min(i+1,3)}">${r}</div>`).join('');
+  $('app-items').innerHTML=(data.applause||[]).map((a,i)=>`<div class="aitem stagger-${Math.min(i+1,3)}"><div class="adot"></div><span>${a}</span></div>`).join('');
+  $('fix-items').innerHTML=(data.fixes||[]).map((f,i)=>`<div class="fitem stagger-${Math.min(i+1,3)}"><div class="fnum">0${i+1}</div><span>${f}</span></div>`).join('');
+
+  // Metrics + justification reasons
+  const metricMap = [
+    ['c',  data.clarity,         '#FFD60A', data.clarityReason],
+    ['s',  data.structure,       '#4B9EFF', data.structureReason],
+    ['t',  data.productThinking, '#1EE07A', data.productThinkingReason],
+    ['co', data.completeness,    '#FF6540', data.completenessReason],
+  ];
+  metricMap.forEach(([id, v, col, reason]) => {
+    const rv = Math.round(v);
+    $('mv-'+id).textContent = rv;
+    setTimeout(() => { $('mf-'+id).style.width = rv+'%'; }, 300);
+    const rEl = $('mr-'+id);
+    if (rEl && reason) rEl.textContent = reason;
+  });
+
+  // Score improvement guide — only for scores < 75
+  const guideEl = $('score-guide');
+  if (guideEl) {
+    const steps = data.nextSteps || [];
+    if (s < 75 && steps.length > 0) {
+      const stepsHtml = steps.map((step, i) =>
+        `<div class="sg-step" style="animation-delay:${i * 0.07}s">
+          <div class="sg-step-num">${i+1}</div>
+          <div class="sg-step-text">${step}</div>
+        </div>`
+      ).join('');
+      guideEl.innerHTML = `
+        <div class="sg-header">
+          <span class="sg-icon">📈</span>
+          <span class="sg-title">How to Raise Your Score</span>
+          <span class="sg-subtitle">Do these in order</span>
+        </div>
+        <div class="sg-steps">${stepsHtml}</div>`;
+      guideEl.classList.add('show');
+    } else {
+      guideEl.classList.remove('show');
+      guideEl.innerHTML = '';
+    }
+  }
+
+  // Share card
+  $('sc-score').textContent=s;$('sc-score').style.color=lvl.col;
+  $('sc-level').textContent=`${lvl.emoji} ${lvl.name}`;
+  $('sc-r').textContent='🔥 '+(data.bestRoast||data.roasts?.[0]||'');
+  $('sc-a').textContent='👏 '+(data.bestApplause||data.applause?.[0]||'');
+  $('sc-foot').textContent=lvl.footer;
+
+  // Nav badge
+  const nb=$('nav-badge');nb.textContent=`${lvl.emoji} ${lvl.name} · ${s}/100`;nb.style.borderColor=lvl.col+'50';nb.style.color=lvl.col;nb.style.background=lvl.iconBg;nb.classList.add('show');
+
+  setTimeout(()=>animateLadder(s),100);
+  if(s>=85)setTimeout(doConfetti,500);
+  setTimeout(()=>sndLevel(lvl.id),350);
+}
+
+/* ════════════════════════════════════════════
+   ANALYSIS
+════════════════════════════════════════════ */
+async function doAnalysis() {
+  $('scan-overlay').classList.add('on');
+  const ctaBtn=$('cta'); if(ctaBtn) ctaBtn.disabled=true;
+  const ldBtn=$('landing-cta'); if(ldBtn) ldBtn.disabled=true;
+  const bp=$('bar-prog');if(bp)bp.style.width='0%';
+  let p=0;
+  progInterval=setInterval(()=>{p=Math.min(90,p+Math.random()*3+1);if(bp)bp.style.width=p+'%';},130);
+  msgIdx=0;
+  scanInterval=setInterval(()=>{
+    const[m,s]=SCAN_MSGS[++msgIdx%SCAN_MSGS.length];
+    $('scan-msg').textContent=m;$('scan-sub').textContent=s;sndScan();
+  },900);
+  let data;
+  try{data=await callAPI(prdText);}catch(e){data=getFallback(prdText);}
+  clearInterval(scanInterval);clearInterval(progInterval);
+  if(bp){bp.style.width='100%';setTimeout(()=>{bp.style.width='0%';},500);}
+  $('scan-overlay').classList.remove('on');
+  const ctaBtn2=$('cta'); if(ctaBtn2) ctaBtn2.disabled=false;
+  const ldBtn2=$('landing-cta'); if(ldBtn2) ldBtn2.disabled=false;
+  lastResult=data;renderResults(data);resetBar();
+}
+
+async function callAPI(txt) {
+  const toneMap = {
+    mild:   'warm, encouraging, with gentle wit',
+    spicy:  'sharp, witty, critically honest — use Hinglish naturally where it lands',
+    savage: 'devastatingly brutal and mercilessly funny — like a principal PM who has survived 1000 bad PRDs and has simply stopped pretending'
+  };
+
+  const prompt = `You are a world-class senior product critic reviewing a PRD. Tone: ${toneMap[intensity]}.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MANDATORY PRE-PROCESSING (do this before generating any output)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1 — PARSE SECTIONS
+Identify which of these 7 sections are present vs absent:
+Problem Statement | User Persona | Goals / Success Metrics | Features / Scope | User Flows | Edge Cases | Assumptions
+
+STEP 2 — SCORE EACH DIMENSION (justify internally before outputting the number)
+
+Clarity (0–100): Are the statements specific and unambiguous? Can an engineer read this and know exactly what to build?
+  — Deduct for: vague verbs ("improve", "enhance", "better"), undefined terms, missing constraints
+  — Credit for: specific conditions, numbers, named components
+
+Structure (0–100): Is the document logically organized? Does it flow problem → user → goals → solution?
+  — Deduct for: missing sections, information buried randomly, no headers/hierarchy
+  — Credit for: clear section separation, logical flow, scannable format
+
+Product Thinking (0–100): Does the author understand the user, the problem, and why this solution?
+  — Deduct for: no user context, solution-first thinking, no "why now", missing tradeoffs
+  — Credit for: named personas, quantified problems, alternatives considered
+
+Completeness (0–100): Are all critical sections covered with enough depth?
+  — Deduct for: missing sections, shallow treatment of existing sections
+  — Credit for: edge cases, success metrics, acceptance criteria, non-goals
+
+STEP 3 — IDENTIFY GAPS (grounded in actual text)
+For each gap found, note the EXACT phrase or section name that proves it.
+
+STEP 4 — QUOTE RULE (STRICT — NO EXCEPTIONS)
+Every single roast line and fix MUST either:
+  (a) Quote an exact phrase from the PRD in "double quotes", OR
+  (b) Name a specific absent section by name
+FORBIDDEN: Generic statements like "metrics are missing" or "clarity is low" with no reference to actual content.
+EXAMPLE OF BAD: "The goals section lacks measurable metrics."
+EXAMPLE OF GOOD: "The Goals section says 'increase user engagement' — engagement is not a metric. Define the event, the baseline, and the target number."
+
+STEP 5 — IMPROVEMENT GUIDE (required when overallScore < 75)
+If the score is below 75, generate a "nextSteps" array: 3–5 short, ordered, PM-voice instructions that tell the author exactly what to do first to raise their score. Each step should be concrete, reference a missing or weak section, and feel like advice from a senior PM, not a rubric.
+Example: "Before your next draft, open the Goals section and replace every verb like 'improve' or 'increase' with a sentence of the form: [metric] will move from [baseline] to [target] within [timeframe]."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT FORMAT — Return ONLY this raw JSON. No markdown. No explanation. No preamble.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{
+  "overallScore": <integer 0–100>,
+  "clarity": <integer 0–100>,
+  "clarityReason": "<1-sentence justification quoting PRD text or naming specific issue>",
+  "structure": <integer 0–100>,
+  "structureReason": "<1-sentence justification>",
+  "productThinking": <integer 0–100>,
+  "productThinkingReason": "<1-sentence justification>",
+  "completeness": <integer 0–100>,
+  "completenessReason": "<1-sentence justification>",
+  "sectionsFound": [<section names that exist>],
+  "sectionsMissing": [<section names that are absent>],
+  "roasts": [
+    "<roast — must quote exact PRD phrase OR name absent section>",
+    "<roast 2>",
+    "<roast 3 — max 5 total>"
+  ],
+  "applause": [
+    "<praise — only if genuinely deserved, reference the actual strength in the PRD>",
+    "<praise 2>",
+    "<praise 3 — omit items if not genuinely earned>"
+  ],
+  "fixes": [
+    "<actionable fix — quote the specific weak phrase or name the missing section>",
+    "<fix 2>",
+    "<fix 3 — max 5 total>"
+  ],
+  "nextSteps": [
+    "<step 1 — only if overallScore < 75, otherwise empty array>",
+    "<step 2>",
+    "<step 3>"
+  ],
+  "bestRoast": "<single most surgical roast line, must quote PRD>",
+  "bestApplause": "<single strongest genuine praise line>"
+}
+
+PRD to review:
+---
+${txt.substring(0, 3500)}
+---`;
+
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 2200,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!res.ok) throw new Error('API ' + res.status);
+  const d = await res.json();
+  const raw = d.content.map(c => c.text || '').join('').replace(/```json|```/g, '').trim();
+  const parsed = JSON.parse(raw);
+  parsed.roasts    = (parsed.roasts    || []).slice(0, 5);
+  parsed.applause  = (parsed.applause  || []).slice(0, 5);
+  parsed.fixes     = (parsed.fixes     || []).slice(0, 5);
+  parsed.nextSteps = (parsed.nextSteps || []).filter(Boolean).slice(0, 5);
+  return parsed;
+}
+
+/* ── Structured fallback — mirrors the 5-step logic locally ── */
+function getFallback(txt) {
+  // STEP 1: detect sections
+  const found   = [];
+  const missing = [];
+  const SEC = [
+    ['Problem Statement',  /problem\s*statement|problem\s*:/i],
+    ['User Persona',       /persona|user segment|target user|who is|user profile/i],
+    ['Goals / Metrics',    /goal|success metric|kpi|north star|target|measure|okr/i],
+    ['Features / Scope',   /feature|scope|requirement|user stor/i],
+    ['User Flows',         /user flow|journey|step \d|flow\s*:/i],
+    ['Edge Cases',         /edge case|error state|empty state|fallback|exception/i],
+    ['Assumptions',        /assumption|we assume|given that/i],
+  ];
+  SEC.forEach(([name, re]) => re.test(txt) ? found.push(name) : missing.push(name));
+
+  // Extract real phrases for quoting
+  const vagueWords  = (txt.match(/\b(improve|better|seamless|intuitive|enhance|optimize|good|nice|great|simple)\b/gi) || []);
+  const goalLine    = txt.match(/goal[s]?\s*[:\-–]?\s*(.{10,80})/i)?.[1]?.trim();
+  const probLine    = txt.match(/problem\s*[:\-–]?\s*(.{10,100})/i)?.[1]?.trim();
+  const metricLine  = txt.match(/(success|metric|measure|kpi)[s]?\s*[:\-–]?\s*(.{10,80})/i)?.[2]?.trim();
+
+  let s = 55;
+  const R = [], A = [], F = [];
+
+  // — Problem Statement —
+  if (/problem\s*statement|problem\s*:/i.test(txt)) {
+    if (probLine && /improve|better|fix|not good|unhappy/i.test(probLine)) {
+      s -= 6;
+      R.push(`The Problem Statement writes "${probLine.substring(0,60)}" — this describes a feeling, not a problem. Feelings are not insights. What is the drop-off rate? What behaviour changed?`);
+      F.push(`Rewrite the Problem Statement sentence starting with "${probLine.substring(0,30)}…" using this format: "[X]% of [user type] experience [specific behaviour] because [root cause], costing [measurable impact]."`);
+    } else {
+      s += 7;
+      A.push('The Problem Statement is present and frames the document with a real issue — already ahead of most first drafts.');
+    }
+  } else {
+    s -= 12;
+    R.push('There is no Problem Statement section. The document jumps directly to goals and features, which means engineering and design have no shared understanding of what is being solved.');
+    F.push('Add a Problem Statement section before Goals. It should answer: who is affected, what exactly goes wrong, how often, and what is the cost of inaction.');
+  }
+
+  // — User Persona —
+  if (/persona|user segment|target user|who is/i.test(txt)) {
+    s += 5;
+    A.push('User context exists in the document — the "who" is at least acknowledged, which keeps the team from building for a fictional average user.');
+  } else {
+    s -= 9;
+    const userCount = (txt.match(/\buser[s]?\b/gi) || []).length;
+    R.push(`The word "user" appears ${userCount} times in this PRD, but no persona is defined. Who is this user? What is their role, their goal, their frustration?`);
+    F.push('Add a User Personas section with 2 types. For each: write their job title, primary goal, biggest pain point, and the specific context in which they encounter this problem.');
+  }
+
+  // — Goals / Metrics —
+  if (/kpi|success metric|north star|measure|target|%|retention|conversion/i.test(txt)) {
+    s += 8;
+    A.push('Success metrics exist — this PRD will know whether it succeeded, which is more than most documents can claim.');
+  } else if (goalLine) {
+    s -= 8;
+    R.push(`The Goals section says "${goalLine.substring(0,60)}" — but there is no baseline, no target number, and no measurement method. "Increase engagement" is not a goal. It is a wish.`);
+    F.push(`Replace "${goalLine.substring(0,40)}…" in the Goals section with a measurable OKR: e.g. "Reduce notification opt-out rate from [current %] to [target %] within 60 days of launch."`);
+  } else {
+    s -= 10;
+    R.push('Goals / Success Metrics section is absent. The document describes what to build, but provides zero way to know if building it worked. Success kaise measure karoge?');
+    F.push('Add a Goals / Success Metrics section: 2–3 OKRs in the format "[metric] moves from [baseline] to [target] by [date]." Include a primary north star metric.');
+  }
+
+  // — Edge Cases —
+  if (/edge case|error state|empty state|fallback|exception/i.test(txt)) {
+    s += 7;
+    A.push('Error states and edge cases are present — engineers can build defensively, which means fewer 2am incidents.');
+  } else {
+    s -= 6;
+    R.push('Edge Cases section does not exist. What happens when there is no data? What happens when the API fails? What happens if the user has no permissions? These questions will be answered in production, expensively.');
+    F.push('Add an Edge Cases section covering at minimum: empty state (no content to show), failure state (network/API error), permission-denied state, and any data-limit conditions.');
+  }
+
+  // — Vague language —
+  if (vagueWords.length >= 3) {
+    s -= 7;
+    const sample = vagueWords.slice(0, 3).map(w => `"${w}"`).join(', ');
+    R.push(`The document uses ${sample} as requirements. These are design vibes, not engineering specs. None of these words can be verified in a pull request.`);
+    F.push(`Search for ${sample} throughout the document. For each occurrence, ask: "What does this look like in the UI? How do we measure it?" Replace the word with the specific answer.`);
+  }
+
+  // — Features / Scope —
+  if (/feature|scope|requirement|user stor/i.test(txt)) {
+    s += 4;
+    A.push('Features and scope are documented — the team at least has a shared object to point at during sprint planning.');
+  } else {
+    s -= 5;
+    F.push('Add a Features / Scope section that lists: (a) what will be built in this version, (b) what is explicitly out of scope, and (c) any dependencies on other teams or systems.');
+  }
+
+  // — Length —
+  if (txt.length < 350) {
+    s -= 12;
+    R.push(`This PRD is ${txt.length} characters. A Swiggy delivery update contains more product context. An engineer reading this document would need to make at least 10 assumptions to start work.`);
+  } else if (txt.length > 1200) {
+    s += 5;
+    A.push('The document has meaningful depth — the effort invested here is visible, even where the content needs sharpening.');
+  }
+
+  // — Timeline —
+  if (/timeline|q1|q2|q3|q4|sprint|week|month/i.test(txt)) {
+    s += 3;
+    A.push('Timeline is present — stakeholders have a shared expectation of delivery, which reduces the "when is this shipping?" Slack thread by at least 70%.');
+  }
+
+  // STEP 2: build justification reasons
+  const clarityScore = Math.max(8, Math.min(97, s - 5 + (vagueWords.length >= 3 ? -8 : 4)));
+  const structScore  = Math.max(8, Math.min(97, s   + (found.length >= 4 ? 5 : -5)));
+  const thinkScore   = Math.max(8, Math.min(97, s - 8 + (/persona|who is/i.test(txt) ? 8 : -5)));
+  const compScore    = Math.max(8, Math.min(97, s - 10 + (found.length * 3)));
+
+  const clarityReason     = vagueWords.length >= 3
+    ? `Words like ${vagueWords.slice(0,2).map(w=>`"${w}"`).join(' and ')} appear without measurable definitions.`
+    : 'Statements are generally specific enough to be actionable.';
+  const structureReason   = found.length >= 4
+    ? `${found.length} of 7 expected sections are present and logically sequenced.`
+    : `Only ${found.length} of 7 expected sections are present — key context is scattered or missing.`;
+  const thinkingReason    = /persona|who is/i.test(txt)
+    ? 'User context is acknowledged, though depth of empathy varies by section.'
+    : 'No user persona defined — the document reasons from solution, not from user need.';
+  const completenessReason = missing.length > 0
+    ? `Missing sections: ${missing.slice(0,3).join(', ')}.`
+    : 'All key sections are covered.';
+
+  // nextSteps for low scores
+  const nextSteps = [];
+  if (s < 75) {
+    if (missing.includes('User Persona'))
+      nextSteps.push('Start your next revision by writing a User Persona section. Name 2 user types and for each write one sentence: their role, one goal, and one frustration. Do this before touching anything else.');
+    if (!metricLine && missing.includes('Goals / Metrics'))
+      nextSteps.push('Open your Goals section and delete every verb that cannot be measured: "improve", "increase", "better". Replace each with a sentence in this format: "[Metric] moves from [X] to [Y] by [date]."');
+    if (missing.includes('Edge Cases'))
+      nextSteps.push('Add an Edge Cases section. Ask your engineering lead: "What breaks when data is missing, the API is slow, or the user has no permissions?" Write those answers down now, not in sprint 3.');
+    if (vagueWords.length >= 3)
+      nextSteps.push(`Do a find-replace pass for ${vagueWords.slice(0,3).map(w=>`"${w}"`).join(', ')}. For each, write one sentence that describes exactly what the user sees or does. "Seamless" is not a deliverable.`);
+    if (missing.includes('Problem Statement'))
+      nextSteps.push('Add a Problem Statement before your Goals. One paragraph: what is broken, who is affected, how often, and why fixing it matters now. If you cannot write this paragraph, the PRD is not ready to be written yet.');
+  }
+
+  // Pad arrays
+  while (R.length < 3) R.push('The confidence in the assumptions baked into this document is load-bearing — and none of those assumptions are written down.');
+  while (A.length < 3) A.push('The document structure shows awareness of what a PRD should contain, even where execution needs work.');
+  while (F.length < 3) F.push('Add a Non-Goals section — one sentence per item stating what this version explicitly will NOT solve, to prevent scope creep from well-meaning stakeholders.');
+
+  s = Math.max(8, Math.min(93, s));
+
+  return {
+    overallScore:       s,
+    clarity:            clarityScore,
+    clarityReason,
+    structure:          structScore,
+    structureReason,
+    productThinking:    thinkScore,
+    productThinkingReason: thinkingReason,
+    completeness:       compScore,
+    completenessReason,
+    sectionsFound:      found,
+    sectionsMissing:    missing,
+    roasts:             R.slice(0, 5),
+    applause:           A.slice(0, 5),
+    fixes:              F.slice(0, 5),
+    nextSteps:          nextSteps.slice(0, 5),
+    bestRoast:          R[0],
+    bestApplause:       A[0]
+  };
+}
+
+/* ════════════════════════════════════════════
+   STAKEHOLDER RECORDER
+════════════════════════════════════════════ */
+let mediaRecorder=null, audioChunks=[], recordingStream=null;
+let timerInterval=null, timerSecs=0;
+let isRecording=false, hasRecording=false;
+let vizAnimFrame=null, analyserNode=null, vizBars=[];
+let transcriptSegments=[];
+
+// Build viz bars
+(function(){
+  const viz=$('rec-viz');
+  for(let i=0;i<24;i++){
+    const b=document.createElement('div');b.className='viz-bar';viz.appendChild(b);vizBars.push(b);
+  }
+})();
+
+function toggleRecorderPanel(){
+  $('recorder-panel').classList.toggle('open');
+}
+
+async function startRecording(){
+  try{
+    recordingStream=await navigator.mediaDevices.getUserMedia({audio:true});
+  }catch(e){
+    toast('Microphone access denied. Please allow mic access.');return;
+  }
+  audioChunks=[];transcriptSegments=[];
+  $('rec-insights').innerHTML='';$('rec-raw').innerHTML='';
+  $('rec-empty-msg').style.display='block';
+  isRecording=true;hasRecording=false;
+
+  // Web Audio visualiser
+  const ac=new AudioContext();analyserNode=ac.createAnalyser();analyserNode.fftSize=64;
+  const src=ac.createMediaStreamSource(recordingStream);src.connect(analyserNode);
+  function drawViz(){
+    vizAnimFrame=requestAnimationFrame(drawViz);
+    const buf=new Uint8Array(analyserNode.frequencyBinCount);analyserNode.getByteFrequencyData(buf);
+    vizBars.forEach((b,i)=>{
+      const v=buf[Math.floor(i/vizBars.length*buf.length)]||0;
+      const h=isRecording?Math.max(4,v/2.5):4;
+      b.style.height=h+'px';
+      b.style.background=`rgba(255,101,64,${isRecording?0.3+v/400:0.12})`;
+    });
+  }drawViz();
+
+  mediaRecorder=new MediaRecorder(recordingStream,{mimeType:MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'audio/ogg'});
+  mediaRecorder.ondataavailable=e=>{if(e.data.size>0)audioChunks.push(e.data);};
+  mediaRecorder.start(1000);
+
+  // Timer
+  timerSecs=0;updateTimer();
+  timerInterval=setInterval(()=>{timerSecs++;updateTimer();},1000);
+
+  // UI
+  $('rec-start-btn').disabled=true;$('rec-stop-btn').disabled=false;
+  $('nav-record-btn').classList.add('recording');
+  $('rec-title-el').classList.add('rec-active');
+  $('rec-dot').style.background='var(--orange)';
+  const navDot=document.querySelector('#nav-record-btn .rec-dot');
+  if(navDot) navDot.style.background='var(--orange)';
+  $('rec-status').textContent='Recording in progress…';
+
+  // Simulate live transcript (browser SpeechRecognition if available, else mock ticks)
+  startLiveTranscript();
+}
+
+function stopRecording(){
+  if(!mediaRecorder)return;
+  mediaRecorder.stop();recordingStream.getTracks().forEach(t=>t.stop());
+  clearInterval(timerInterval);cancelAnimationFrame(vizAnimFrame);
+  isRecording=false;hasRecording=true;
+  vizBars.forEach(b=>{b.style.height='4px';b.style.background='rgba(255,101,64,0.12)';});
+  $('rec-start-btn').disabled=false;$('rec-stop-btn').disabled=true;
+  $('rec-analyse-btn').disabled=false;
+  $('nav-record-btn').classList.remove('recording');
+  $('rec-title-el').classList.remove('rec-active');
+  $('rec-dot').style.background='var(--text-dim)';
+  const navDot2=document.querySelector('#nav-record-btn .rec-dot');
+  if(navDot2) navDot2.style.background='';
+  $('rec-status').textContent=`Recorded ${formatTime(timerSecs)}. Ready to analyse.`;
+  stopLiveTranscript();
+}
+
+function clearRecording(){
+  if(isRecording)stopRecording();
+  audioChunks=[];transcriptSegments=[];hasRecording=false;timerSecs=0;updateTimer();
+  $('rec-start-btn').disabled=false;$('rec-stop-btn').disabled=true;$('rec-analyse-btn').disabled=true;
+  $('rec-insights').innerHTML='';$('rec-raw').innerHTML='';
+  $('rec-empty-msg').style.display='block';
+  $('rec-status').textContent='Press Record to start capturing the review';
+}
+
+function updateTimer(){$('rec-timer').textContent=formatTime(timerSecs);}
+function formatTime(s){return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
+
+// Live speech recognition (falls back to mock if unsupported)
+let speechRec=null;
+const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+
+function startLiveTranscript(){
+  if(!SpeechRec){startMockTranscript();return;}
+  speechRec=new SpeechRec();
+  speechRec.continuous=true;speechRec.interimResults=true;speechRec.lang='en-US';
+  let finalSeg='';
+  speechRec.onresult=e=>{
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal){finalSeg+=e.results[i][0].transcript+' ';}
+      else{interim+=e.results[i][0].transcript;}
+    }
+    if(finalSeg.length>60){transcriptSegments.push(finalSeg.trim());appendRawSeg(finalSeg.trim());finalSeg='';}
+  };
+  speechRec.onerror=()=>{startMockTranscript();};
+  try{speechRec.start();}catch(e){startMockTranscript();}
+}
+
+let mockTransInterval=null;
+const MOCK_PHRASES=[
+  "I think the problem statement could be a bit more specific, like what exact user segment are we targeting?",
+  "The success metrics look okay but I'd want to see retention as a north star, not just activation.",
+  "Can we add a section on what competitors are doing? That context is missing.",
+  "The timeline seems aggressive. Two weeks for backend and frontend together won't work.",
+  "I love the user stories format, it makes it very clear what we're building.",
+  "What happens if the user doesn't have an internet connection? Edge case not covered.",
+  "The problem is well defined, I think the team would have no ambiguity starting from this.",
+  "We keep saying 'improve the experience' — can we be more specific about what that means exactly?",
+  "I'm concerned about the scope. This feels like a six-month project pitched as a six-week one.",
+  "The non-goals section is really helpful. Nice to see what we're deliberately not solving.",
+  "Can someone own the success metrics tracking? It can't just be PM's responsibility.",
+  "I think the acceptance criteria need more detail for the engineering team to estimate properly.",
+];
+let mockIdx=0;
+function startMockTranscript(){
+  mockIdx=0;
+  mockTransInterval=setInterval(()=>{
+    if(!isRecording){clearInterval(mockTransInterval);return;}
+    const phrase=MOCK_PHRASES[mockIdx%MOCK_PHRASES.length];
+    transcriptSegments.push(phrase);appendRawSeg(phrase);mockIdx++;
+  },4500);
+}
+function stopLiveTranscript(){
+  if(speechRec){try{speechRec.stop();}catch(e){}}
+  clearInterval(mockTransInterval);
+}
+
+function appendRawSeg(text){
+  $('rec-empty-msg').style.display='none';
+  const seg=document.createElement('div');
+  seg.className='trans-seg';seg.textContent='"'+text+'"';
+  $('rec-raw').appendChild(seg);
+  seg.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+async function analyseRecording(){
+  if(!hasRecording&&transcriptSegments.length===0){toast('No recording to analyse.');return;}
+  $('rec-status').textContent='Analysing feedback…';
+  $('rec-analyse-btn').disabled=true;
+  const transcript=transcriptSegments.join(' | ');
+  let insights;
+  try{insights=await callRecorderAPI(transcript);}catch(e){insights=getMockInsights(transcriptSegments);}
+  $('rec-insights').innerHTML='';
+  $('rec-empty-msg').style.display='none';
+  insights.forEach((ins,i)=>{
+    const card=document.createElement('div');
+    card.className=`insight-card ${ins.type}`;
+    card.style.animationDelay=(i*0.08)+'s';
+    const icon=ins.type==='take'?'✅':ins.type==='ignore'?'🚫':'💬';
+    const label=ins.type==='take'?'TAKE THIS':ins.type==='ignore'?'POLITELY IGNORE':'NOTE';
+    card.innerHTML=`<div class="insight-tag">${icon} ${label}</div>${ins.text}`;
+    $('rec-insights').prepend(card);
+  });
+  $('rec-status').textContent='Analysis complete. Scroll up to see insights.';
+  $('rec-analyse-btn').disabled=false;
+  toast('Stakeholder analysis ready! 🎤');
+  $('rec-transcript-wrap').scrollTop=0;
+}
+
+async function callRecorderAPI(transcript){
+  const prompt=`You are an expert product manager coach. A stakeholder design review just happened.
+Transcript segments: "${transcript}"
+
+Analyse the feedback. Return ONLY raw JSON array (no markdown):
+[
+  {"type":"take","text":"<actionable feedback worth implementing — be specific>"},
+  {"type":"take","text":"<another valid point>"},
+  {"type":"ignore","text":"<feedback that is vague, political, or not user-grounded — explain briefly why to deprioritise>"},
+  {"type":"ignore","text":"<another to ignore with brief reason>"},
+  {"type":"neutral","text":"<something that needs more data or context before deciding>"}
+]
+Be honest, witty, and specific. Reference the actual transcript content.`;
+  const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+  if(!res.ok)throw new Error();
+  const d=await res.json();
+  return JSON.parse(d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim());
+}
+
+function getMockInsights(segs){
+  const insights=[];
+  segs.forEach(seg=>{
+    const sl=seg.toLowerCase();
+    if(/metric|kpi|retention|north star|measure/i.test(sl))insights.push({type:'take',text:seg});
+    else if(/competitor|context|research|data/i.test(sl))insights.push({type:'take',text:seg});
+    else if(/edge case|connection|what if|fallback/i.test(sl))insights.push({type:'take',text:seg});
+    else if(/timeline|aggressive|six.month|estimate/i.test(sl))insights.push({type:'neutral',text:seg});
+    else if(/improve.*experience|bit more|could be|feels like/i.test(sl))insights.push({type:'ignore',text:seg+' — too vague without specifics to act on.'});
+    else insights.push({type:'neutral',text:seg});
+  });
+  if(insights.length===0)return[
+    {type:'take',text:'Define measurable success metrics — retention as north star, not just activation.'},
+    {type:'ignore',text:'"Improve the experience" — classic non-feedback. Ask for specifics before including.'},
+    {type:'neutral',text:'Timeline concerns raised — worth a separate estimation session with engineering.'},
+  ];
+  return insights.slice(0,6);
+}
+
+/* ════════════════════════════════════════════
+   SHARE
+════════════════════════════════════════════ */
+function doCopy(){
+  if(!lastResult)return;sndCopy();
+  const s=Math.round(lastResult.overallScore),l=getLevel(s);
+  navigator.clipboard.writeText(`PRD Roast\n\n${s}/100 · ${l.emoji} ${l.name}\n\n🔥 ${lastResult.bestRoast||lastResult.roasts[0]}\n\n👏 ${lastResult.bestApplause||lastResult.applause[0]}\n\nReviewed by Brutal PM AI`);
+  toast('Copied! Go flex. 😈');
+}
+function doShare(){
+  if(!lastResult)return;sndCopy();
+  const s=Math.round(lastResult.overallScore),l=getLevel(s);
+  const text=`My PRD score: ${s}/100 — ${l.emoji} ${l.name}\n\nGet roasted at prdroast.app`;
+  if(navigator.share)navigator.share({title:'PRD Roast',text});
+  else{navigator.clipboard.writeText(text);toast('Share text copied!');}
+}
+function doDownload(){
+  sndCopy();const c=$('share-card');if(!c){toast('Analyse a PRD first.');return;}
+  const sc=document.createElement('script');
+  sc.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+  sc.onload=()=>html2canvas(c,{backgroundColor:'#20232E',scale:2}).then(cv=>{const a=document.createElement('a');a.download='prd-roast.png';a.href=cv.toDataURL();a.click();toast('Downloaded! 🎉');});
+  sc.onerror=()=>toast('Screenshot the card instead.');
+  document.head.appendChild(sc);
+}
+
+/* ════════════════════════════════════════════
+   AUDIO
+════════════════════════════════════════════ */
+function acx(){if(!aCtx)aCtx=new(window.AudioContext||window.webkitAudioContext)();return aCtx;}
+function beep(freq,type,dur,vol=0.08,delay=0){try{const a=acx(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.type=type;o.frequency.setValueAtTime(freq,a.currentTime+delay);g.gain.setValueAtTime(0,a.currentTime+delay);g.gain.linearRampToValueAtTime(vol,a.currentTime+delay+0.015);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+delay+dur);o.start(a.currentTime+delay);o.stop(a.currentTime+delay+dur+0.02);}catch(e){}}
+const sndScan=()=>beep(1800,'sine',0.07,0.025);
+const sndCopy=()=>{beep(1400,'sine',0.09,0.035);beep(1700,'sine',0.07,0.025,0.08);};
+function sndLevel(id){const m={god:[[523,0],[659,.07],[784,.14],[1047,.21],[1319,.28]],senior:[[660,0],[880,.07],[1100,.14]],shipping:[[440,0],[550,.08],[660,.15]],intern:[[330,0],[415,.08]],beta:[[220,0],[180,.09],[140,.18]]};(m[id]||m.intern).forEach(([f,d])=>beep(f,'sine',0.28,0.075,d));}
+
+/* ════════════════════════════════════════════
+   CONFETTI
+════════════════════════════════════════════ */
+function doConfetti(){
+  const cols=['#B46EFF','#1EE07A','#4B9EFF','#FFD60A','#FF6540','#fff','#C4B5FD'];
+  for(let i=0;i<90;i++)setTimeout(()=>{
+    const p=document.createElement('div');p.className='cf';const z=3+Math.random()*6;
+    p.style.cssText=`left:${Math.random()*100}vw;width:${z}px;height:${z}px;background:${cols[i%cols.length]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.7}s;`;
+    document.body.appendChild(p);setTimeout(()=>p.remove(),5000);
+  },i*16);
+}
+
+/* ════════════════════════════════════════════
+   UTILS
+════════════════════════════════════════════ */
+function resetBar(){
+  prdText='';
+  const bpta=$('bar-paste-ta'); if(bpta) bpta.value='';
+  const ctab=$('cta'); if(ctab) ctab.disabled=true;
+  const ulbl=$('upload-lbl'); if(ulbl) ulbl.innerHTML='<b>Upload</b> PRD';
+  const uz2=$('upload-zone'); if(uz2) uz2.classList.remove('active');
+}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600);}
+
+const uz=$('upload-zone');
+if(uz){
+  uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('active');});
+  uz.addEventListener('dragleave',()=>uz.classList.remove('active'));
+  uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('active');if(e.dataTransfer.files[0])onAppFile(e.dataTransfer.files[0]);});
+}
+
+/* ════════════════════════════════════════════
+   SAMPLE
+════════════════════════════════════════════ */
+const SAMPLE=`PRD: Notification Center v2.0
+Product: FinApp Mobile · Status: Draft
+
+Overview:
+We want to improve the notification experience for users. The current system is not good and users are unhappy. We will make it better by adding more features and fixing the issues. This should be done ASAP.
+
+Problem Statement:
+Users are not engaging with notifications. We need to fix this.
+
+Goals:
+- Make notifications better
+- Increase user engagement
+- Improve the overall experience
+
+User Stories:
+As a user, I want to receive notifications.
+As an admin, I want to manage notifications.
+
+Success Metrics:
+Success will be measured by user satisfaction scores.
+
+Timeline: Q1 Design, Q2 Dev, Q3 Launch
+
+Open Questions:
+- What notifications to send?
+- How often is too often?`;
+</script>
+</body>
+</html>
