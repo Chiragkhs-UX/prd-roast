@@ -212,6 +212,7 @@ module.exports = async function handler(req, res) {
 
   // ── Check API key ────────────────────────────────────────────────────────
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+console.log("KEY CHECK:", GEMINI_API_KEY);
   if (!GEMINI_API_KEY) {
     console.error('[analyze] GEMINI_API_KEY is not set in environment variables');
     return res.status(500).json({
@@ -225,7 +226,9 @@ module.exports = async function handler(req, res) {
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const prompt = buildPrompt(prd, intensity || 'spicy');
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent({
+  contents: [{ parts: [{ text: prompt }] }]
+})
     const rawText = result.response.text();
 
     // ── Extract + sanitise JSON ──────────────────────────────────────────
