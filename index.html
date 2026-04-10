@@ -116,344 +116,212 @@ html,body{
 .screen.hidden{opacity:0;pointer-events:none;transform:translateY(10px);}
 
 /* ══════════════════════════════════════════════
-   LANDING PAGE  (Screen 1)
+   LANDING PAGE
 ══════════════════════════════════════════════ */
 #screen-landing{
-  display:flex;flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  padding:36px 24px 80px;
   overflow-y:auto;
   background:
-    radial-gradient(ellipse 700px 400px at 50% 0px, rgba(30,224,122,0.07) 0%, transparent 70%),
-    radial-gradient(ellipse 500px 300px at 80% 80%, rgba(180,110,255,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 20% 40%, rgba(30,224,122,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 300px at 80% 60%, rgba(180,110,255,0.05) 0%, transparent 70%),
     var(--bg);
 }
-
-/* eyebrow */
+#landing-inner{
+  min-height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+#landing-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px 48px 60px 60px;
+  border-right:1px solid var(--border);
+}
+#landing-right{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:60px 60px 60px 48px;
+  gap:14px;
+}
 .landing-eyebrow{
   font-family:var(--mono);font-size:10px;font-weight:700;
   letter-spacing:3px;text-transform:uppercase;
   color:var(--green);
-  display:flex;align-items:center;gap:12px;
-  margin-bottom:24px;
-  margin-top:0;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
 }
-.landing-eyebrow::before,.landing-eyebrow::after{
-  content:'';width:32px;height:1px;background:var(--green-hi);
-}
-
-/* big headline */
+.landing-eyebrow::before{content:\'\';width:24px;height:1px;background:var(--green-hi);}
 .landing-h1{
-  font-size:clamp(38px,6vw,72px);font-weight:800;
-  line-height:1.08;letter-spacing:-2px;
-  text-align:center;margin-bottom:22px;
-  color:var(--text);
-  max-width:800px;
+  font-size:clamp(28px,3vw,52px);font-weight:800;
+  line-height:1.1;letter-spacing:-1.5px;
+  color:var(--text);max-width:520px;margin-bottom:16px;
 }
 .landing-h1 em{
   font-style:normal;
   background:linear-gradient(135deg,var(--green) 0%,var(--blue) 60%,var(--purple) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-
 .landing-sub{
-  font-size:17px;color:var(--text-mid);
-  text-align:center;max-width:480px;
-  line-height:1.65;margin-bottom:44px;
-  font-weight:400;
+  font-size:15px;color:var(--text-mid);
+  line-height:1.65;margin-bottom:24px;font-weight:400;
 }
 .landing-sub b{color:var(--text);font-weight:600;}
-
-/* intensity selector */
-.intensity-section{
-  display:flex;align-items:center;gap:10px;margin-bottom:32px;
-}
+.intensity-section{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
 .intensity-label{
-  font-family:var(--mono);font-size:10px;font-weight:700;
+  font-family:var(--mono);font-size:9px;font-weight:700;
   letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);
 }
 .int-pill{
-  padding:8px 20px;border-radius:100px;
-  border:1px solid var(--border2);
-  background:var(--surface);
-  color:var(--text-mid);
-  font-family:var(--sans);font-size:13px;font-weight:600;
+  padding:7px 16px;border-radius:100px;
+  border:1px solid var(--border2);background:var(--surface);
+  color:var(--text-mid);font-family:var(--sans);font-size:12px;font-weight:600;
   cursor:pointer;transition:all 0.18s;
 }
-.int-pill:hover{color:var(--text);border-color:var(--border2);}
+.int-pill:hover{color:var(--text);}
 .int-pill.on{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
-
-/* upload box */
+.feature-tags{display:flex;gap:7px;flex-wrap:wrap;}
+.feat-tag{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:600;color:var(--text-mid);
+  padding:5px 12px;border-radius:100px;
+  border:1px solid var(--border);background:var(--surface);
+}
 .upload-box{
-  width:100%;max-width:640px;
-  background:var(--surface);
-  border:2px dashed var(--border2);
-  border-radius:20px;
-  padding:36px 32px;
-  text-align:center;
-  cursor:pointer;
-  position:relative;
-  transition:all 0.22s;
-  margin-bottom:16px;
+  width:100%;background:var(--surface);
+  border:2px dashed var(--border2);border-radius:16px;
+  padding:24px 20px;text-align:center;cursor:pointer;
+  position:relative;transition:all 0.2s;
 }
 .upload-box:hover,.upload-box.drag{
-  border-color:var(--green);
-  background:var(--bg-lighter);
+  border-color:var(--green);background:var(--bg-lighter);
   box-shadow:0 0 0 4px var(--green-dim);
 }
 .upload-box input{position:absolute;inset:0;opacity:0;cursor:pointer;}
-.upload-icon{font-size:36px;margin-bottom:12px;display:block;}
-.upload-title{font-size:16px;font-weight:700;margin-bottom:5px;}
-.upload-sub{font-size:13px;color:var(--text-mid);}
+.upload-icon{font-size:26px;margin-bottom:8px;display:block;}
+.upload-title{font-size:14px;font-weight:700;margin-bottom:4px;color:var(--text);}
+.upload-sub{font-size:12px;color:var(--text-mid);}
 .upload-sub span{color:var(--green);}
-.upload-file-types{
-  display:flex;gap:7px;justify-content:center;margin-top:14px;flex-wrap:wrap;
-}
+.upload-file-types{display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap;}
 .ft-tag{
   font-family:var(--mono);font-size:9px;font-weight:700;
-  padding:3px 10px;border-radius:5px;
-  background:rgba(255,255,255,0.06);
-  color:var(--text-dim);letter-spacing:1px;
+  padding:2px 8px;border-radius:4px;
+  background:rgba(255,255,255,0.06);color:var(--text-dim);letter-spacing:1px;
 }
-.upload-or{display:none;} /* removed — replaced by drawer */
+.landing-or{
+  font-family:var(--mono);font-size:9px;color:var(--text-dim);
+  letter-spacing:2px;text-transform:uppercase;text-align:center;
+}
+#landing-paste-row{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:12px;overflow:hidden;
+}
+#landing-paste-row textarea{
+  width:100%;background:transparent;border:none;
+  color:var(--text);font-family:var(--sans);font-size:13px;
+  padding:12px 14px;resize:none;outline:none;line-height:1.6;
+}
+#landing-paste-row textarea::placeholder{color:var(--text-dim);}
+#landing-paste-meta{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:7px 14px;border-top:1px solid var(--border);background:var(--bg-lighter);
+}
+#paste-char{font-family:var(--mono);font-size:10px;color:var(--text-dim);}
+.pd-sample-btn{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--text-dim);background:none;border:none;cursor:pointer;transition:color 0.15s;
+}
+.pd-sample-btn:hover{color:var(--green);}
 
-/* ── BIG CTA BUTTON ── */
-#landing-cta{
-  width:100%;max-width:640px;
-  height:72px;
+/* ══ ROAST CTA — always visible below inputs ══ */
+#landing-roast-cta{
+  width:100%;height:56px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--surface2);
+  border:2px solid var(--border2);
+  border-radius:14px;
+  color:var(--text-dim);
+  font-family:var(--sans);font-size:15px;font-weight:700;
+  cursor:not-allowed;
+  transition:all 0.25s ease;
+  letter-spacing:-0.2px;
+}
+#landing-roast-cta.ready{
   background:linear-gradient(135deg,var(--green) 0%,var(--blue) 100%);
-  border:none;border-radius:16px;
-  color:#061510;
-  font-family:var(--sans);
-  cursor:pointer;
-  transition:all 0.22s cubic-bezier(0.4,0,0.2,1);
-  box-shadow:0 0 36px rgba(30,224,122,0.28), 0 4px 24px rgba(30,224,122,0.18);
-  display:flex;align-items:center;gap:16px;
-  padding:0 28px;
-  text-align:left;
-  margin-bottom:0;
-  position:relative;
-  overflow:hidden;
+  border-color:transparent;color:#061510;cursor:pointer;
+  box-shadow:0 0 28px rgba(30,224,122,0.3), 0 4px 16px rgba(30,224,122,0.2);
 }
-#landing-cta::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%);
-  pointer-events:none;
+#landing-roast-cta.ready:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 44px rgba(30,224,122,0.45), 0 8px 24px rgba(30,224,122,0.3);
 }
-#landing-cta:hover{
-  transform:translateY(-3px);
-  box-shadow:0 0 48px rgba(30,224,122,0.38), 0 8px 32px rgba(30,224,122,0.22);
+#landing-roast-cta.ready:active{transform:none;}
+#landing-roast-cta .cta-arrow{
+  margin-left:auto;font-size:18px;opacity:0;transition:all 0.2s;
 }
-#landing-cta:active{transform:translateY(-1px);}
-.cta-icon{
-  font-size:28px;flex-shrink:0;
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+#landing-roast-cta.ready .cta-arrow{opacity:0.8;}
+#landing-roast-cta.ready:hover .cta-arrow{transform:translateX(4px);}
+#landing-hint{
+  font-family:var(--mono);font-size:10px;color:var(--text-dim);
+  text-align:center;letter-spacing:0.5px;transition:opacity 0.3s;
 }
-.cta-main{
-  font-size:20px;font-weight:800;
-  letter-spacing:-0.4px;line-height:1.1;
-  display:block;
-}
-.cta-sub{
-  font-size:12px;font-weight:500;
-  opacity:0.65;display:block;margin-top:2px;
-  letter-spacing:0.1px;
-}
-.cta-arrow{
-  margin-left:auto;flex-shrink:0;
-  font-size:20px;opacity:0.7;
-  transition:transform 0.2s;
-}
-#landing-cta:hover .cta-arrow{transform:translateX(4px);}
+#landing-hint.hidden{opacity:0;pointer-events:none;}
 
-/* ── PASTE DRAWER OVERLAY ── */
+/* Paste drawer */
 #paste-drawer-overlay{
   position:fixed;inset:0;z-index:600;
-  background:rgba(10,11,15,0.7);
-  backdrop-filter:blur(6px);
-  opacity:0;pointer-events:none;
-  transition:opacity 0.32s ease;
+  background:rgba(10,11,15,0.7);backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;transition:opacity 0.32s ease;
 }
 #paste-drawer-overlay.show{opacity:1;pointer-events:all;}
-
-/* ── PASTE DRAWER PANEL ── */
 #paste-drawer{
-  position:fixed;
-  right:0;top:0;bottom:0;
-  width:min(540px, 96vw);
-  z-index:700;
-  background:var(--bg-lighter);
-  border-left:1px solid var(--border2);
+  position:fixed;right:0;top:0;bottom:0;width:min(540px, 96vw);z-index:700;
+  background:var(--bg-lighter);border-left:1px solid var(--border2);
   display:flex;flex-direction:column;
-  transform:translateX(100%);
-  transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);
+  transform:translateX(100%);transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);
   box-shadow:-24px 0 80px rgba(0,0,0,0.45);
 }
 #paste-drawer.open{transform:translateX(0);}
-
-/* drawer header */
 #pd-header{
-  flex-shrink:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:22px 24px 18px;
-  border-bottom:1px solid var(--border);
+  flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+  padding:22px 24px 18px;border-bottom:1px solid var(--border);
 }
 #pd-title{display:flex;align-items:center;gap:14px;}
 #pd-title-icon{font-size:26px;}
-#pd-title-main{
-  font-size:17px;font-weight:800;letter-spacing:-0.3px;
-  color:var(--text);
-}
-#pd-title-sub{
-  font-size:12px;color:var(--text-mid);margin-top:2px;
-  font-style:italic;
-}
+#pd-title-main{font-size:17px;font-weight:800;letter-spacing:-0.3px;color:var(--text);}
+#pd-title-sub{font-size:12px;color:var(--text-mid);margin-top:2px;font-style:italic;}
 #pd-close{
-  width:32px;height:32px;border-radius:8px;
-  border:1px solid var(--border2);background:transparent;
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:transparent;
   color:var(--text-mid);font-size:14px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all 0.15s;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;
 }
-#pd-close:hover{border-color:var(--border2);color:var(--text);background:var(--surface2);}
-
-/* drawer body */
-#pd-body{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  padding:16px 24px;
-  min-height:0;
-  overflow:hidden;
-}
+#pd-close:hover{color:var(--text);background:var(--surface2);}
+#pd-body{flex:1;display:flex;flex-direction:column;padding:16px 24px;min-height:0;overflow:hidden;}
 #pd-body textarea{
-  flex:1;
-  width:100%;
-  height:100%;
-  min-height:200px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:12px;
+  flex:1;width:100%;height:100%;min-height:200px;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
   color:var(--text);font-family:var(--sans);font-size:13px;
-  padding:16px 18px;resize:none;outline:none;
-  line-height:1.7;
-  transition:border-color 0.18s;
-  display:block;
+  padding:16px 18px;resize:none;outline:none;line-height:1.7;transition:border-color 0.18s;display:block;
 }
 #pd-body textarea:focus{border-color:rgba(30,224,122,0.45);}
 #pd-body textarea::placeholder{color:var(--text-dim);line-height:1.7;}
-
-/* drawer footer */
 #pd-footer{
-  flex-shrink:0;
-  padding:16px 24px 24px;
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;
-  background:var(--bg-lighter);
+  flex-shrink:0;padding:16px 24px 24px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg-lighter);
 }
 #pd-footer-left{display:flex;align-items:center;gap:16px;}
-#paste-char{
-  font-family:var(--mono);font-size:10px;
-  color:var(--text-dim);letter-spacing:0.5px;
-}
-.pd-sample-btn{
-  font-family:var(--mono);font-size:10px;font-weight:700;
-  color:var(--text-dim);background:none;border:none;cursor:pointer;
-  transition:color 0.15s;letter-spacing:0.5px;
-  text-decoration:underline;text-decoration-color:transparent;
-}
-.pd-sample-btn:hover{color:var(--green);text-decoration-color:var(--green);}
 #pd-roast-btn{
-  height:48px;padding:0 28px;
-  background:linear-gradient(135deg,var(--green),var(--blue));
-  border:none;border-radius:10px;
-  color:#061510;font-family:var(--sans);
-  font-size:14px;font-weight:800;
-  cursor:pointer;white-space:nowrap;flex-shrink:0;
-  transition:all 0.18s;
-  box-shadow:0 0 20px rgba(30,224,122,0.2);
-  letter-spacing:-0.2px;
+  height:44px;padding:0 24px;background:linear-gradient(135deg,var(--green),var(--blue));
+  border:none;border-radius:10px;color:#061510;font-family:var(--sans);font-size:13px;font-weight:800;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.18s;
 }
-#pd-roast-btn:hover{transform:translateY(-1px);box-shadow:0 4px 24px rgba(30,224,122,0.3);}
-#pd-roast-btn:active{transform:none;}
-#pd-roast-btn:disabled{
-  background:var(--surface2);color:var(--text-dim);
-  box-shadow:none;cursor:not-allowed;transform:none;
-}
-
-/* file-loaded roast button — hidden until file is uploaded */
-#file-roast-btn{
-  /* Always flex so alignment works on reveal */
-  display:flex;
-  align-items:center;
-  gap:16px;
-  width:100%;
-  max-width:640px;
-  height:72px;
-  padding:0 28px;
-  background:linear-gradient(135deg,var(--orange) 0%,#ff9500 100%);
-  border:none;
-  border-radius:16px;
-  color:#fff;
-  font-family:var(--sans);
-  cursor:pointer;
-  text-align:left;
-  position:relative;
-  overflow:hidden;
-  /* Hidden state: zero height + invisible + no margin */
-  max-height:0;
-  opacity:0;
-  margin-bottom:0;
-  pointer-events:none;
-  transition:
-    max-height 0.38s cubic-bezier(0.4,0,0.2,1),
-    opacity    0.3s  ease,
-    margin     0.35s ease,
-    box-shadow 0.3s  ease,
-    transform  0.2s  ease;
-  box-shadow:none;
-}
-#file-roast-btn::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 60%);
-  pointer-events:none;
-}
-/* Shown state — expand into view */
-#file-roast-btn.show{
-  max-height:80px;
-  opacity:1;
-  margin-bottom:12px;
-  pointer-events:all;
-  box-shadow:0 0 36px rgba(255,101,64,0.35), 0 4px 24px rgba(255,101,64,0.2);
-  animation:ctaPulse 2s ease-in-out 0.4s infinite;
-}
-#file-roast-btn:hover{
-  transform:translateY(-3px);
-  box-shadow:0 0 56px rgba(255,101,64,0.5), 0 8px 40px rgba(255,101,64,0.3);
-}
-#file-roast-btn:active{transform:translateY(-1px);}
-@keyframes ctaPulse{
-  0%,100%{box-shadow:0 0 36px rgba(255,101,64,0.3), 0 4px 24px rgba(255,101,64,0.18);}
-  50%{box-shadow:0 0 56px rgba(255,101,64,0.55), 0 8px 40px rgba(255,101,64,0.35);}
-}
-
-/* landing CTA — file-ready state (kept for safety) */
-#landing-cta.file-ready{
-  background:linear-gradient(135deg,var(--green) 0%,var(--blue) 100%);
-}
-
-/* feature tags */
-.feature-tags{
-  display:flex;gap:10px;margin-top:28px;flex-wrap:wrap;justify-content:center;
-}
-.feat-tag{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;font-weight:600;color:var(--text-mid);
-  padding:7px 16px;border-radius:100px;
-  border:1px solid var(--border);
-  background:var(--surface);
+#pd-roast-btn:hover{transform:translateY(-1px);}
+#pd-roast-btn:disabled{background:var(--surface2);color:var(--text-dim);cursor:not-allowed;transform:none;}
+#file-roast-btn{display:none;}
+.cta-icon{font-size:22px;}
+.cta-main{font-size:20px;font-weight:800;letter-spacing:-0.4px;line-height:1.1;display:block;}
+.cta-sub{font-size:12px;font-weight:500;opacity:0.65;display:block;margin-top:2px;}
+.cta-arrow{margin-left:auto;flex-shrink:0;font-size:18px;opacity:0.7;transition:transform 0.2s;}
+@media(max-width:820px){
+  #landing-inner{grid-template-columns:1fr;}
+  #landing-left{padding:32px 24px 16px;border-right:none;border-bottom:1px solid var(--border);}
+  #landing-right{padding:20px 24px 40px;}
 }
 
 /* ══════════════════════════════════════════════
@@ -1147,6 +1015,88 @@ html,body{
 }
 .key-clear-btn:hover{color:var(--orange);}
 
+/* ── API STATUS PILL (nav) ── */
+#api-status{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 12px;border-radius:8px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  color:var(--text-dim);
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  cursor:pointer;
+  transition:all 0.2s;
+  letter-spacing:0.3px;
+  user-select:none;
+}
+#api-status:hover{background:var(--surface2);color:var(--text);}
+#api-status.ok   {border-color:rgba(30,224,122,0.4); color:var(--green);  background:rgba(30,224,122,0.07);}
+#api-status.fail {border-color:rgba(255,101,64,0.4); color:var(--orange); background:rgba(255,101,64,0.07);}
+#api-status.loading{border-color:rgba(75,158,255,0.4); color:var(--blue);  background:rgba(75,158,255,0.07);}
+#api-status-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--text-dim);
+  flex-shrink:0;transition:all 0.3s;
+}
+#api-status.ok      #api-status-dot{background:var(--green); box-shadow:0 0 6px var(--green);}
+#api-status.fail    #api-status-dot{background:var(--orange);box-shadow:0 0 6px var(--orange);}
+#api-status.loading #api-status-dot{background:var(--blue);  animation:dotPulse 0.8s ease-in-out infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+
+/* ── API STATUS PANEL ── */
+#api-status-panel{
+  position:fixed;
+  top:calc(var(--nav) + 8px);
+  right:16px;
+  width:300px;
+  z-index:500;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4);
+  overflow:hidden;
+  display:none;
+}
+#api-status-panel.open{display:block;}
+#asp-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px 10px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg-lighter);
+}
+#asp-title{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--text-mid);
+}
+#asp-close{
+  background:none;border:none;color:var(--text-dim);
+  font-size:12px;cursor:pointer;padding:2px 6px;
+  border-radius:4px;transition:all 0.15s;
+}
+#asp-close:hover{color:var(--text);background:var(--surface2);}
+#asp-rows{padding:12px 16px;}
+.asp-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:5px 0;border-bottom:1px solid var(--border);
+}
+.asp-row:last-child{border-bottom:none;}
+.asp-key{
+  font-family:var(--mono);font-size:10px;color:var(--text-dim);
+  letter-spacing:0.5px;flex-shrink:0;padding-right:12px;
+  margin-top:1px;
+}
+.asp-val{
+  font-family:var(--mono);font-size:10px;color:var(--text);
+  text-align:right;word-break:break-all;
+}
+#asp-footer{
+  padding:8px 16px;
+  font-family:var(--mono);font-size:9px;color:var(--text-dim);
+  text-align:center;letter-spacing:0.5px;
+  border-top:1px solid var(--border);
+  background:var(--bg-lighter);
+}
+
 /* TOAST */
 #toast{
   position:fixed;bottom:calc(var(--bar) + 14px);left:50%;
@@ -1171,6 +1121,10 @@ html,body{
     PRD<span>Roast</span>
   </div>
   <div class="nav-right">
+    <div id="api-status" onclick="toggleApiStatus()" title="API status">
+      <span id="api-status-dot"></span>
+      <span id="api-status-label">No request yet</span>
+    </div>
     <button id="nav-key-btn" onclick="openKeyModal()" title="API Key settings">
       <span id="nav-key-dot"></span>
       <span id="nav-key-label">Add API Key</span>
@@ -1183,67 +1137,100 @@ html,body{
   </div>
 </nav>
 
+<!-- ══ API STATUS PANEL ═════════════════════════════════ -->
+<div id="api-status-panel">
+  <div id="asp-header">
+    <span id="asp-title">API Status</span>
+    <button id="asp-close" onclick="toggleApiStatus()">✕</button>
+  </div>
+  <div id="asp-rows">
+    <div class="asp-row"><span class="asp-key">Source</span><span class="asp-val" id="asp-source">—</span></div>
+    <div class="asp-row"><span class="asp-key">Status</span><span class="asp-val" id="asp-http">—</span></div>
+    <div class="asp-row"><span class="asp-key">Time</span><span class="asp-val" id="asp-time">—</span></div>
+    <div class="asp-row"><span class="asp-key">Endpoint</span><span class="asp-val" id="asp-endpoint">—</span></div>
+    <div class="asp-row" id="asp-err-row" style="display:none"><span class="asp-key">Error</span><span class="asp-val" id="asp-error" style="color:var(--orange)">—</span></div>
+  </div>
+  <div id="asp-footer">Click the pill in the nav to close</div>
+</div>
+
 <!-- ══ SCREEN 1: LANDING ════════════════════════════════ -->
 <div class="screen" id="screen-landing">
-  <div class="landing-eyebrow">AI-Powered PRD Review</div>
 
-  <h1 class="landing-h1">
-    Upload your PRD.<br>
-    Get <em>roasted</em>.<br>
-    Maybe respected.
-  </h1>
+  <div id="landing-inner">
 
-  <p class="landing-sub">
-    Because <b>"LGTM"</b> is not feedback.<br>
-    And vague requirements deserve brutal clarity.
-  </p>
-
-  <div class="intensity-section">
-    <span class="intensity-label">Roast Level</span>
-    <button class="int-pill" data-lv="mild" onclick="setLandingIntensity(this)">😇 Mild</button>
-    <button class="int-pill on" data-lv="spicy" onclick="setLandingIntensity(this)">🌶 Spicy</button>
-    <button class="int-pill" data-lv="savage" onclick="setLandingIntensity(this)">😈 Savage</button>
-  </div>
-
-  <div class="upload-box" id="landing-upload">
-    <input type="file" accept=".pdf,.doc,.docx,.txt" onchange="onLandingFile(this.files[0])">
-    <span class="upload-icon" id="upload-icon-el">📄</span>
-    <div class="upload-title" id="landing-upload-title">Drop your PRD here</div>
-    <div class="upload-sub" id="upload-sub-el">Drag & drop or <span>click to browse</span></div>
-    <div class="upload-file-types" id="upload-types-el">
-      <span class="ft-tag">PDF</span>
-      <span class="ft-tag">DOC</span>
-      <span class="ft-tag">DOCX</span>
-      <span class="ft-tag">TXT</span>
+    <!-- Left: headline + intensity -->
+    <div id="landing-left">
+      <div class="landing-eyebrow">AI-Powered PRD Review</div>
+      <h1 class="landing-h1">
+        Upload your PRD.<br>
+        Get <em>roasted</em>.<br>
+        Maybe respected.
+      </h1>
+      <p class="landing-sub">
+        Because <b>"LGTM"</b> is not feedback.<br>
+        And vague requirements deserve brutal clarity.
+      </p>
+      <div class="intensity-section">
+        <span class="intensity-label">Roast Level</span>
+        <button class="int-pill" data-lv="mild"   onclick="setLandingIntensity(this)">😇 Mild</button>
+        <button class="int-pill on" data-lv="spicy"  onclick="setLandingIntensity(this)">🌶 Spicy</button>
+        <button class="int-pill" data-lv="savage" onclick="setLandingIntensity(this)">😈 Savage</button>
+      </div>
+      <div class="feature-tags">
+        <div class="feat-tag">🔥 Roast</div>
+        <div class="feat-tag">👏 Applause</div>
+        <div class="feat-tag">🛠 Fixes</div>
+        <div class="feat-tag">🎤 Stakeholder Recorder</div>
+        <div class="feat-tag">🏅 PM Level</div>
+      </div>
     </div>
-  </div>
 
-  <!-- Shown only after a file is loaded -->
-  <button id="file-roast-btn" onclick="doFileRoast()">
-    <span class="cta-icon">🔥</span>
-    <div>
-      <span class="cta-main">Roast My PRD</span>
-      <span class="cta-sub" id="file-roast-sub">File loaded and ready</span>
-    </div>
-    <span class="cta-arrow">→</span>
-  </button>
+    <!-- Right: upload + CTA -->
+    <div id="landing-right">
 
-  <button id="landing-cta" onclick="openPasteDrawer()">
-    <span class="cta-icon">✍️</span>
-    <div>
-      <span class="cta-main">Paste Your PRD</span>
-      <span class="cta-sub">Or click here to paste text instead</span>
-    </div>
-    <span class="cta-arrow">→</span>
-  </button>
+      <!-- Upload box -->
+      <div class="upload-box" id="landing-upload">
+        <input type="file" accept=".pdf,.doc,.docx,.txt" onchange="onLandingFile(this.files[0])">
+        <span class="upload-icon" id="upload-icon-el">📄</span>
+        <div class="upload-title" id="landing-upload-title">Drop your PRD here</div>
+        <div class="upload-sub" id="upload-sub-el">Drag & drop or <span>click to browse</span></div>
+        <div class="upload-file-types" id="upload-types-el">
+          <span class="ft-tag">PDF</span>
+          <span class="ft-tag">DOC</span>
+          <span class="ft-tag">DOCX</span>
+          <span class="ft-tag">TXT</span>
+        </div>
+      </div>
 
-  <div class="feature-tags">
-    <div class="feat-tag">🔥 Savage Roast</div>
-    <div class="feat-tag">👏 Real Applause</div>
-    <div class="feat-tag">🛠 Actionable Fixes</div>
-    <div class="feat-tag">🎤 Stakeholder Recorder</div>
-    <div class="feat-tag">🏅 PM Level Badge</div>
-  </div>
+      <!-- Divider -->
+      <div class="landing-or">— or paste text —</div>
+
+      <!-- Paste row -->
+      <div id="landing-paste-row">
+        <textarea
+          id="landing-paste-ta"
+          placeholder="Paste your PRD text here…"
+          oninput="onLandingPaste()"
+          spellcheck="false"
+          rows="3"
+        ></textarea>
+        <div id="landing-paste-meta">
+          <span id="paste-char">0 chars</span>
+          <button class="pd-sample-btn" onclick="loadLandingSample()">Load sample</button>
+        </div>
+      </div>
+
+      <!-- THE ROAST BUTTON — always visible, always below the input area -->
+      <button id="landing-roast-cta" onclick="runLandingRoast()">
+        <span id="lrc-icon">🔥</span>
+        <span id="lrc-text">Roast My PRD</span>
+        <span class="cta-arrow">→</span>
+      </button>
+
+      <div id="landing-hint">Upload a file or paste text to activate</div>
+
+    </div><!-- /landing-right -->
+  </div><!-- /landing-inner -->
 </div>
 
 <!-- ══ PASTE DRAWER ════════════════════════════════════ -->
@@ -1523,6 +1510,51 @@ let apiKey   = '';
 ════════════════════════════════════════════ */
 let pendingAnalysisAfterKey = false;
 
+/* ════════════════════════════════════════════
+   API STATUS INDICATOR
+════════════════════════════════════════════ */
+function setApiStatus(state, label, detail) {
+  const pill = $('api-status');
+  const dot  = $('api-status-dot');
+  const lbl  = $('api-status-label');
+  if (!pill) return;
+  pill.className = '';           // clear old state classes
+  pill.classList.add(state);     // 'ok' | 'fail' | 'loading'
+  if (lbl) lbl.textContent = label;
+
+  // Update detail panel if detail provided
+  if (detail) {
+    const set = (id, val) => { const el=$('asp-'+id); if(el) el.textContent = val || '—'; };
+    set('source',   detail.source);
+    set('http',     detail.http);
+    set('time',     detail.time);
+    set('endpoint', detail.endpoint);
+    const errRow = $('asp-err-row');
+    if (detail.error) {
+      set('error', detail.error);
+      if (errRow) errRow.style.display = 'flex';
+    } else {
+      if (errRow) errRow.style.display = 'none';
+    }
+  }
+}
+
+function toggleApiStatus() {
+  const panel = $('api-status-panel');
+  if (panel) panel.classList.toggle('open');
+}
+
+// Close panel when clicking outside
+document.addEventListener('click', e => {
+  const panel = $('api-status-panel');
+  const pill  = $('api-status');
+  if (panel && panel.classList.contains('open')) {
+    if (!panel.contains(e.target) && !pill.contains(e.target)) {
+      panel.classList.remove('open');
+    }
+  }
+});
+
 function updateNavKeyState() {
   const btn = $('nav-key-btn');
   const lbl = $('nav-key-label');
@@ -1621,21 +1653,19 @@ function goToLanding() {
   $('nav-record-btn').style.display = 'none';
   $('recorder-panel').classList.remove('open');
   // Reset upload box
-  $('landing-upload-title').textContent = 'Drop your PRD here';
-  $('landing-upload').style.borderColor = '';
-  $('landing-upload').style.borderStyle = '';
-  $('landing-upload').style.background = '';
-  $('upload-sub-el').style.display = '';
-  $('upload-types-el').style.display = '';
-  $('upload-icon-el').textContent = '📄';
-  // Hide fire CTA, restore paste CTA
-  $('file-roast-btn').classList.remove('show');
-  $('file-roast-sub').textContent = 'File loaded and ready';
-  const cta = $('landing-cta');
-  cta.classList.remove('file-ready');
-  cta.style.opacity = '';
-  cta.style.pointerEvents = '';
-  prdText = '';
+  const ut=$('landing-upload-title'); if(ut) ut.textContent='Drop your PRD here';
+  const lu2=$('landing-upload');
+  if(lu2){lu2.style.borderColor='';lu2.style.borderStyle='';lu2.style.background='';}
+  const sub=$('upload-sub-el'); if(sub) sub.style.display='';
+  const typ=$('upload-types-el'); if(typ) typ.style.display='';
+  const ico=$('upload-icon-el'); if(ico) ico.textContent='📄';
+  // Reset roast CTA
+  const btn=$('landing-roast-cta'); if(btn) btn.classList.remove('ready');
+  const hint=$('landing-hint'); if(hint) hint.classList.remove('hidden');
+  // Reset paste area
+  const ta=$('landing-paste-ta'); if(ta) ta.value='';
+  const pc=$('paste-char'); if(pc) pc.textContent='0 chars';
+  prdText='';
 }
 
 /* ════════════════════════════════════════════
@@ -1670,43 +1700,58 @@ function setLandingIntensity(btn) {
   document.querySelector(`.ipill[data-lv="${intensity}"]`)?.classList.add('on');
 }
 
+function setReadyCTA() {
+  const btn = $('landing-roast-cta');
+  if (!btn) return;
+  if (prdText.trim().length >= 20) {
+    btn.classList.add('ready');
+    const hint = $('landing-hint'); if(hint) hint.classList.add('hidden');
+    $('lrc-icon').textContent = '🔥';
+    $('lrc-text').textContent = 'Roast My PRD';
+  } else {
+    btn.classList.remove('ready');
+    const hint = $('landing-hint'); if(hint) hint.classList.remove('hidden');
+    $('lrc-icon').textContent = '🔥';
+    $('lrc-text').textContent = 'Roast My PRD';
+  }
+}
+
+async function runLandingRoast() {
+  if (prdText.trim().length < 20) { toast('Paste or upload a PRD first.'); return; }
+  showApp();
+  await doAnalysis();
+}
+
+// kept for drawer compat
+function handleLandingCTA() { runLandingRoast(); }
+async function doFileRoast() { runLandingRoast(); }
+
 function onLandingFile(file) {
   if (!file) return;
   const r = new FileReader();
   r.onload = e => {
     prdText = e.target.result.substring(0,4000);
-    // Update upload box to show success state
     $('landing-upload-title').textContent = '✓  ' + file.name.substring(0, 32);
-    $('upload-sub-el').style.display = 'none';
-    $('upload-types-el').style.display = 'none';
+    const sub = $('upload-sub-el'); if(sub) sub.style.display='none';
+    const types = $('upload-types-el'); if(types) types.style.display='none';
     $('upload-icon-el').textContent = '✅';
     $('landing-upload').style.borderColor = 'var(--green)';
     $('landing-upload').style.borderStyle = 'solid';
     $('landing-upload').style.background = 'rgba(30,224,122,0.05)';
-    // Show the dedicated fire CTA, hide the paste CTA
-    $('file-roast-sub').textContent = file.name.substring(0,38) + '  ·  ' + (prdText.length/1000).toFixed(1) + 'k chars';
-    $('file-roast-btn').classList.add('show');
-    $('landing-cta').style.opacity = '0.35';
-    $('landing-cta').style.pointerEvents = 'none';
-    // Scroll to CTA
-    setTimeout(() => $('file-roast-btn').scrollIntoView({behavior:'smooth', block:'nearest'}), 50);
+    setReadyCTA();
   };
   r.readAsText(file);
 }
 
-async function doFileRoast() {
-  if (!prdText.trim()) return;
-  showApp();
-  await doAnalysis();
-}
-
 function onLandingPaste() {
-  const v = $('landing-paste-ta').value;
-  prdText = v;
+  const ta = $('landing-paste-ta');
+  if (!ta) return;
+  prdText = ta.value;
   const charEl = $('paste-char');
-  if (charEl) charEl.textContent = v.length.toLocaleString() + ' characters';
-  const btn = $('pd-roast-btn');
-  if (btn) btn.disabled = v.trim().length < 20;
+  if (charEl) charEl.textContent = prdText.length.toLocaleString() + ' chars';
+  // Also enable drawer button if open
+  const btn = $('pd-roast-btn'); if(btn) btn.disabled = prdText.trim().length < 20;
+  setReadyCTA();
 }
 
 function loadLandingSample() {
@@ -1716,9 +1761,13 @@ function loadLandingSample() {
 
 // Drag on landing upload
 const lu = $('landing-upload');
-lu.addEventListener('dragover', e=>{e.preventDefault();lu.classList.add('drag');});
-lu.addEventListener('dragleave',()=>lu.classList.remove('drag'));
-lu.addEventListener('drop',e=>{e.preventDefault();lu.classList.remove('drag');if(e.dataTransfer.files[0])onLandingFile(e.dataTransfer.files[0]);});
+if (lu) {
+  lu.addEventListener('dragover', e=>{e.preventDefault();lu.classList.add('drag');});
+  lu.addEventListener('dragleave',()=>lu.classList.remove('drag'));
+  lu.addEventListener('drop',e=>{e.preventDefault();lu.classList.remove('drag');if(e.dataTransfer.files[0])onLandingFile(e.dataTransfer.files[0]);});
+}
+
+
 
 /* ════════════════════════════════════════════
    APP BAR INPUT
@@ -1937,6 +1986,7 @@ function renderResults(data) {
    ANALYSIS
 ════════════════════════════════════════════ */
 async function doAnalysis() {
+  setApiStatus('loading', 'Connecting…');
   $('scan-overlay').classList.add('on');
   const ctaBtn=$('cta'); if(ctaBtn) ctaBtn.disabled=true;
   const bp=$('bar-prog');if(bp)bp.style.width='0%';
@@ -1948,17 +1998,32 @@ async function doAnalysis() {
     $('scan-msg').textContent=m;$('scan-sub').textContent=s;sndScan();
   },900);
   let data; let usedFallback = false;
+  const t0 = Date.now();
   try {
     data = await callAPI(prdText);
+    const ms = Date.now() - t0;
+    setApiStatus('ok', `Gemini · ${(ms/1000).toFixed(1)}s`, {
+      source: '✓ Gemini AI (Live)',
+      http: '200 OK',
+      time: `${ms}ms`,
+      endpoint: BACKEND_URL,
+      error: null,
+    });
   } catch(e) {
     usedFallback = true;
-    const msg = e.message || '';
-    if (msg.includes('Even AI gave up') || msg.includes('quota') || msg.includes('429')) {
+    const ms = Date.now() - t0;
+    const msg = e.message || 'Unknown error';
+    setApiStatus('fail', 'Fallback · ' + (msg.length > 22 ? msg.substring(0,22)+'…' : msg), {
+      source: '✗ Local Fallback',
+      http: msg.includes('429') ? '429 Quota exceeded' : msg.includes('500') ? '500 Server error' : msg.includes('401') ? '401 Unauthorized' : 'Failed',
+      time: `${ms}ms`,
+      endpoint: BACKEND_URL,
+      error: msg,
+    });
+    if (msg.includes('429') || msg.includes('quota')) {
       toast('Even AI gave up on this PRD 😅 — showing local analysis');
-    } else if (msg.includes('500') || msg.includes('502')) {
-      toast('Server hiccup — showing local analysis while we sort it out');
     } else {
-      toast('Using local analysis — ' + msg.substring(0, 60));
+      toast('API unavailable — showing local analysis');
     }
     data = getFallback(prdText);
   }
@@ -1967,7 +2032,6 @@ async function doAnalysis() {
   $('scan-overlay').classList.remove('on');
   const ctaBtn2=$('cta'); if(ctaBtn2) ctaBtn2.disabled=false;
   lastResult=data;renderResults(data);resetBar();
-  if (!usedFallback) toast('✓ Roasted by Gemini AI.');
 }
 
 async function callAPI(txt) {
