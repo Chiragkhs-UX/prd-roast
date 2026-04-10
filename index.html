@@ -385,30 +385,50 @@ html,body{
 
 /* file-loaded roast button — hidden until file is uploaded */
 #file-roast-btn{
-  display:none;
-  width:100%;max-width:640px;
+  /* Always flex so alignment works on reveal */
+  display:flex;
+  align-items:center;
+  gap:16px;
+  width:100%;
+  max-width:640px;
   height:72px;
+  padding:0 28px;
   background:linear-gradient(135deg,var(--orange) 0%,#ff9500 100%);
-  border:none;border-radius:16px;
+  border:none;
+  border-radius:16px;
   color:#fff;
   font-family:var(--sans);
   cursor:pointer;
-  transition:all 0.22s cubic-bezier(0.4,0,0.2,1);
-  box-shadow:0 0 36px rgba(255,101,64,0.35), 0 4px 24px rgba(255,101,64,0.2);
-  align-items:center;gap:16px;
-  padding:0 28px;
   text-align:left;
-  margin-bottom:10px;
   position:relative;
   overflow:hidden;
-  animation:ctaPulse 2s ease-in-out infinite;
+  /* Hidden state: zero height + invisible + no margin */
+  max-height:0;
+  opacity:0;
+  margin-bottom:0;
+  pointer-events:none;
+  transition:
+    max-height 0.38s cubic-bezier(0.4,0,0.2,1),
+    opacity    0.3s  ease,
+    margin     0.35s ease,
+    box-shadow 0.3s  ease,
+    transform  0.2s  ease;
+  box-shadow:none;
 }
 #file-roast-btn::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 60%);
   pointer-events:none;
 }
-#file-roast-btn.show{display:flex;}
+/* Shown state — expand into view */
+#file-roast-btn.show{
+  max-height:80px;
+  opacity:1;
+  margin-bottom:12px;
+  pointer-events:all;
+  box-shadow:0 0 36px rgba(255,101,64,0.35), 0 4px 24px rgba(255,101,64,0.2);
+  animation:ctaPulse 2s ease-in-out 0.4s infinite;
+}
 #file-roast-btn:hover{
   transform:translateY(-3px);
   box-shadow:0 0 56px rgba(255,101,64,0.5), 0 8px 40px rgba(255,101,64,0.3);
@@ -1608,12 +1628,13 @@ function goToLanding() {
   $('upload-sub-el').style.display = '';
   $('upload-types-el').style.display = '';
   $('upload-icon-el').textContent = '📄';
-  // Hide fire CTA
+  // Hide fire CTA, restore paste CTA
   $('file-roast-btn').classList.remove('show');
   $('file-roast-sub').textContent = 'File loaded and ready';
-  // Reset CTA
   const cta = $('landing-cta');
   cta.classList.remove('file-ready');
+  cta.style.opacity = '';
+  cta.style.pointerEvents = '';
   prdText = '';
 }
 
@@ -1662,11 +1683,13 @@ function onLandingFile(file) {
     $('landing-upload').style.borderColor = 'var(--green)';
     $('landing-upload').style.borderStyle = 'solid';
     $('landing-upload').style.background = 'rgba(30,224,122,0.05)';
-    // Show the dedicated fire CTA
+    // Show the dedicated fire CTA, hide the paste CTA
     $('file-roast-sub').textContent = file.name.substring(0,38) + '  ·  ' + (prdText.length/1000).toFixed(1) + 'k chars';
     $('file-roast-btn').classList.add('show');
-    // Scroll to CTA if needed
-    $('file-roast-btn').scrollIntoView({behavior:'smooth', block:'nearest'});
+    $('landing-cta').style.opacity = '0.35';
+    $('landing-cta').style.pointerEvents = 'none';
+    // Scroll to CTA
+    setTimeout(() => $('file-roast-btn').scrollIntoView({behavior:'smooth', block:'nearest'}), 50);
   };
   r.readAsText(file);
 }
