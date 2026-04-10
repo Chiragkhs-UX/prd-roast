@@ -224,7 +224,7 @@ console.log("KEY CHECK:", GEMINI_API_KEY);
   try {
     const { GoogleGenerativeAI } = require('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-latest' });
     const prompt = buildPrompt(prd, intensity || 'spicy');
     const result = await model.generateContent({
   contents: [{ parts: [{ text: prompt }] }]
