@@ -120,11 +120,12 @@ html,body{
 ══════════════════════════════════════════════ */
 #screen-landing{
   display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:40px 24px 100px;
+  align-items:center;
+  justify-content:flex-start;
+  padding:36px 24px 80px;
   overflow-y:auto;
   background:
-    radial-gradient(ellipse 700px 400px at 50% -60px, rgba(30,224,122,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 700px 400px at 50% 0px, rgba(30,224,122,0.07) 0%, transparent 70%),
     radial-gradient(ellipse 500px 300px at 80% 80%, rgba(180,110,255,0.06) 0%, transparent 70%),
     var(--bg);
 }
@@ -135,7 +136,8 @@ html,body{
   letter-spacing:3px;text-transform:uppercase;
   color:var(--green);
   display:flex;align-items:center;gap:12px;
-  margin-bottom:28px;
+  margin-bottom:24px;
+  margin-top:0;
 }
 .landing-eyebrow::before,.landing-eyebrow::after{
   content:'';width:32px;height:1px;background:var(--green-hi);
@@ -214,58 +216,212 @@ html,body{
   background:rgba(255,255,255,0.06);
   color:var(--text-dim);letter-spacing:1px;
 }
-.upload-or{
-  font-family:var(--mono);font-size:10px;color:var(--text-dim);
-  letter-spacing:2px;text-transform:uppercase;
-  margin:12px 0;
-}
-/* paste zone on landing */
-.landing-paste{
+.upload-or{display:none;} /* removed — replaced by drawer */
+
+/* ── BIG CTA BUTTON ── */
+#landing-cta{
   width:100%;max-width:640px;
-  background:var(--surface);
-  border:1px solid var(--border2);
-  border-radius:14px;
+  height:72px;
+  background:linear-gradient(135deg,var(--green) 0%,var(--blue) 100%);
+  border:none;border-radius:16px;
+  color:#061510;
+  font-family:var(--sans);
+  cursor:pointer;
+  transition:all 0.22s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 0 36px rgba(30,224,122,0.28), 0 4px 24px rgba(30,224,122,0.18);
+  display:flex;align-items:center;gap:16px;
+  padding:0 28px;
+  text-align:left;
+  margin-bottom:0;
+  position:relative;
   overflow:hidden;
-  margin-bottom:24px;
 }
-.landing-paste textarea{
-  width:100%;min-height:100px;
-  background:transparent;
-  border:none;
+#landing-cta::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%);
+  pointer-events:none;
+}
+#landing-cta:hover{
+  transform:translateY(-3px);
+  box-shadow:0 0 48px rgba(30,224,122,0.38), 0 8px 32px rgba(30,224,122,0.22);
+}
+#landing-cta:active{transform:translateY(-1px);}
+.cta-icon{
+  font-size:28px;flex-shrink:0;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+.cta-main{
+  font-size:20px;font-weight:800;
+  letter-spacing:-0.4px;line-height:1.1;
+  display:block;
+}
+.cta-sub{
+  font-size:12px;font-weight:500;
+  opacity:0.65;display:block;margin-top:2px;
+  letter-spacing:0.1px;
+}
+.cta-arrow{
+  margin-left:auto;flex-shrink:0;
+  font-size:20px;opacity:0.7;
+  transition:transform 0.2s;
+}
+#landing-cta:hover .cta-arrow{transform:translateX(4px);}
+
+/* ── PASTE DRAWER OVERLAY ── */
+#paste-drawer-overlay{
+  position:fixed;inset:0;z-index:600;
+  background:rgba(10,11,15,0.7);
+  backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;
+  transition:opacity 0.32s ease;
+}
+#paste-drawer-overlay.show{opacity:1;pointer-events:all;}
+
+/* ── PASTE DRAWER PANEL ── */
+#paste-drawer{
+  position:fixed;
+  right:0;top:0;bottom:0;
+  width:min(540px, 96vw);
+  z-index:700;
+  background:var(--bg-lighter);
+  border-left:1px solid var(--border2);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:-24px 0 80px rgba(0,0,0,0.45);
+}
+#paste-drawer.open{transform:translateX(0);}
+
+/* drawer header */
+#pd-header{
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 24px 18px;
+  border-bottom:1px solid var(--border);
+}
+#pd-title{display:flex;align-items:center;gap:14px;}
+#pd-title-icon{font-size:26px;}
+#pd-title-main{
+  font-size:17px;font-weight:800;letter-spacing:-0.3px;
+  color:var(--text);
+}
+#pd-title-sub{
+  font-size:12px;color:var(--text-mid);margin-top:2px;
+  font-style:italic;
+}
+#pd-close{
+  width:32px;height:32px;border-radius:8px;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text-mid);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;flex-shrink:0;
+}
+#pd-close:hover{border-color:var(--border2);color:var(--text);background:var(--surface2);}
+
+/* drawer body */
+#pd-body{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:16px 24px;
+  min-height:0;
+  overflow:hidden;
+}
+#pd-body textarea{
+  flex:1;
+  width:100%;
+  height:100%;
+  min-height:200px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
   color:var(--text);font-family:var(--sans);font-size:13px;
   padding:16px 18px;resize:none;outline:none;
-  line-height:1.6;
+  line-height:1.7;
+  transition:border-color 0.18s;
+  display:block;
 }
-.landing-paste textarea::placeholder{color:var(--text-dim);}
-.paste-footer{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px 18px;border-top:1px solid var(--border);
+#pd-body textarea:focus{border-color:rgba(30,224,122,0.45);}
+#pd-body textarea::placeholder{color:var(--text-dim);line-height:1.7;}
+
+/* drawer footer */
+#pd-footer{
+  flex-shrink:0;
+  padding:16px 24px 24px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
   background:var(--bg-lighter);
 }
-.paste-char{font-family:var(--mono);font-size:10px;color:var(--text-dim);}
-.paste-sample-btn{
+#pd-footer-left{display:flex;align-items:center;gap:16px;}
+#paste-char{
+  font-family:var(--mono);font-size:10px;
+  color:var(--text-dim);letter-spacing:0.5px;
+}
+.pd-sample-btn{
   font-family:var(--mono);font-size:10px;font-weight:700;
   color:var(--text-dim);background:none;border:none;cursor:pointer;
   transition:color 0.15s;letter-spacing:0.5px;
+  text-decoration:underline;text-decoration-color:transparent;
 }
-.paste-sample-btn:hover{color:var(--green);}
-
-/* main CTA */
-#landing-cta{
-  width:100%;max-width:640px;
-  height:52px;
+.pd-sample-btn:hover{color:var(--green);text-decoration-color:var(--green);}
+#pd-roast-btn{
+  height:48px;padding:0 28px;
   background:linear-gradient(135deg,var(--green),var(--blue));
-  border:none;border-radius:12px;
-  color:#081A0E;font-family:var(--sans);font-size:15px;font-weight:800;
-  cursor:pointer;letter-spacing:-0.3px;
-  transition:all 0.2s;
-  box-shadow:0 0 28px rgba(30,224,122,0.25);
+  border:none;border-radius:10px;
+  color:#061510;font-family:var(--sans);
+  font-size:14px;font-weight:800;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:all 0.18s;
+  box-shadow:0 0 20px rgba(30,224,122,0.2);
+  letter-spacing:-0.2px;
 }
-#landing-cta:hover{transform:translateY(-2px);box-shadow:0 6px 32px rgba(30,224,122,0.35);}
-#landing-cta:active{transform:none;}
-#landing-cta:disabled{
+#pd-roast-btn:hover{transform:translateY(-1px);box-shadow:0 4px 24px rgba(30,224,122,0.3);}
+#pd-roast-btn:active{transform:none;}
+#pd-roast-btn:disabled{
   background:var(--surface2);color:var(--text-dim);
   box-shadow:none;cursor:not-allowed;transform:none;
+}
+
+/* file-loaded roast button — hidden until file is uploaded */
+#file-roast-btn{
+  display:none;
+  width:100%;max-width:640px;
+  height:72px;
+  background:linear-gradient(135deg,var(--orange) 0%,#ff9500 100%);
+  border:none;border-radius:16px;
+  color:#fff;
+  font-family:var(--sans);
+  cursor:pointer;
+  transition:all 0.22s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 0 36px rgba(255,101,64,0.35), 0 4px 24px rgba(255,101,64,0.2);
+  align-items:center;gap:16px;
+  padding:0 28px;
+  text-align:left;
+  margin-bottom:10px;
+  position:relative;
+  overflow:hidden;
+  animation:ctaPulse 2s ease-in-out infinite;
+}
+#file-roast-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 60%);
+  pointer-events:none;
+}
+#file-roast-btn.show{display:flex;}
+#file-roast-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 0 56px rgba(255,101,64,0.5), 0 8px 40px rgba(255,101,64,0.3);
+}
+#file-roast-btn:active{transform:translateY(-1px);}
+@keyframes ctaPulse{
+  0%,100%{box-shadow:0 0 36px rgba(255,101,64,0.3), 0 4px 24px rgba(255,101,64,0.18);}
+  50%{box-shadow:0 0 56px rgba(255,101,64,0.55), 0 8px 40px rgba(255,101,64,0.35);}
+}
+
+/* landing CTA — file-ready state (kept for safety) */
+#landing-cta.file-ready{
+  background:linear-gradient(135deg,var(--green) 0%,var(--blue) 100%);
 }
 
 /* feature tags */
@@ -842,6 +998,135 @@ html,body{
 @keyframes eyeBlink{0%,100%{transform:scaleY(1);}50%{transform:scaleY(0.05);}}
 .blinking{animation:eyeBlink 0.12s ease-in-out;}
 
+/* ── API KEY NAV BUTTON ── */
+#nav-key-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:8px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  color:var(--text-mid);
+  font-family:var(--sans);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all 0.18s;
+}
+#nav-key-btn:hover{background:var(--surface2);color:var(--text);}
+#nav-key-btn.connected{border-color:rgba(30,224,122,0.45);color:var(--green);background:rgba(30,224,122,0.07);}
+#nav-key-btn.error{border-color:rgba(255,101,64,0.4);color:var(--orange);}
+#nav-key-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--text-dim);flex-shrink:0;transition:all 0.3s;
+}
+#nav-key-btn.connected #nav-key-dot{background:var(--green);box-shadow:0 0 8px var(--green-hi);}
+#nav-key-btn.error #nav-key-dot{background:var(--orange);}
+
+/* ── API KEY MODAL ── */
+#key-overlay{
+  position:fixed;inset:0;z-index:800;
+  background:rgba(10,11,15,0.75);
+  backdrop-filter:blur(8px);
+  display:none;
+}
+#key-overlay.show{display:block;}
+#key-modal{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-56%);
+  width:min(460px, 94vw);
+  z-index:900;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:32px 28px 28px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  display:none;
+  flex-direction:column;
+  gap:14px;
+}
+#key-modal.show{
+  display:flex;
+  transform:translate(-50%,-50%);
+}
+#key-modal-icon{font-size:32px;text-align:center;}
+/* provider tabs inside modal */
+.ptab{
+  padding:6px 14px;border-radius:100px;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text-dim);font-family:var(--sans);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all 0.15s;
+}
+.ptab:hover{color:var(--text);border-color:var(--border2);}
+.ptab.on{
+  background:var(--green-dim);
+  border-color:rgba(30,224,122,0.45);
+  color:var(--green);
+}
+
+#key-modal-title{
+  font-size:20px;font-weight:800;letter-spacing:-0.4px;
+  color:var(--text);text-align:center;
+}
+#key-modal-sub{
+  font-size:13px;color:var(--text-mid);text-align:center;line-height:1.6;
+}
+#key-input-wrap{position:relative;display:flex;align-items:center;}
+#key-input{
+  width:100%;height:48px;
+  background:var(--bg);
+  border:1.5px solid var(--border2);
+  border-radius:10px;
+  color:var(--text);
+  font-family:var(--mono);font-size:12px;
+  padding:0 48px 0 16px;
+  outline:none;
+  transition:border-color 0.18s;
+  letter-spacing:0.5px;
+}
+#key-input:focus{border-color:rgba(30,224,122,0.5);}
+#key-input.valid{border-color:rgba(30,224,122,0.65);}
+#key-input.invalid{border-color:rgba(255,101,64,0.6);}
+#key-toggle{
+  position:absolute;right:12px;
+  background:none;border:none;cursor:pointer;
+  font-size:14px;opacity:0.45;transition:opacity 0.15s;padding:4px;
+}
+#key-toggle:hover{opacity:1;}
+#key-hint{
+  font-family:var(--mono);font-size:10px;
+  color:var(--text-dim);text-align:center;letter-spacing:0.3px;
+}
+#key-hint a{color:var(--purple);text-decoration:none;}
+#key-hint a:hover{text-decoration:underline;}
+#key-modal-actions{display:flex;gap:10px;margin-top:4px;}
+#key-cancel-btn{
+  flex:1;height:42px;
+  background:transparent;border:1px solid var(--border2);
+  border-radius:9px;color:var(--text-mid);
+  font-family:var(--sans);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all 0.15s;
+}
+#key-cancel-btn:hover{color:var(--text);background:var(--surface2);}
+#key-save-btn{
+  flex:2;height:42px;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  border:none;border-radius:9px;
+  color:#061510;font-family:var(--sans);font-size:13px;font-weight:800;
+  cursor:pointer;transition:all 0.18s;
+  box-shadow:0 0 16px rgba(30,224,122,0.2);
+}
+#key-save-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(30,224,122,0.3);}
+#key-save-btn:disabled{
+  background:var(--surface2);color:var(--text-dim);
+  box-shadow:none;cursor:not-allowed;transform:none;
+}
+#key-clear-row{
+  text-align:center;
+}
+.key-clear-btn{
+  font-family:var(--mono);font-size:10px;
+  color:var(--text-dim);background:none;border:none;cursor:pointer;
+  transition:color 0.15s;letter-spacing:0.5px;
+}
+.key-clear-btn:hover{color:var(--orange);}
+
 /* TOAST */
 #toast{
   position:fixed;bottom:calc(var(--bar) + 14px);left:50%;
@@ -866,6 +1151,10 @@ html,body{
     PRD<span>Roast</span>
   </div>
   <div class="nav-right">
+    <button id="nav-key-btn" onclick="openKeyModal()" title="API Key settings">
+      <span id="nav-key-dot"></span>
+      <span id="nav-key-label">Add API Key</span>
+    </button>
     <button id="nav-record-btn" onclick="toggleRecorderPanel()" style="display:none;">
       <div class="rec-dot"></div>
       Stakeholder Review
@@ -898,10 +1187,10 @@ html,body{
 
   <div class="upload-box" id="landing-upload">
     <input type="file" accept=".pdf,.doc,.docx,.txt" onchange="onLandingFile(this.files[0])">
-    <span class="upload-icon">📄</span>
+    <span class="upload-icon" id="upload-icon-el">📄</span>
     <div class="upload-title" id="landing-upload-title">Drop your PRD here</div>
-    <div class="upload-sub">Drag & drop or <span>click to browse</span></div>
-    <div class="upload-file-types">
+    <div class="upload-sub" id="upload-sub-el">Drag & drop or <span>click to browse</span></div>
+    <div class="upload-file-types" id="upload-types-el">
       <span class="ft-tag">PDF</span>
       <span class="ft-tag">DOC</span>
       <span class="ft-tag">DOCX</span>
@@ -909,17 +1198,24 @@ html,body{
     </div>
   </div>
 
-  <div class="upload-or">— or paste text —</div>
-
-  <div class="landing-paste">
-    <textarea id="landing-paste-ta" placeholder="Paste your PRD here…&#10;&#10;Reading between your vague lines is our speciality." oninput="onLandingPaste()" rows="4"></textarea>
-    <div class="paste-footer">
-      <span class="paste-char" id="paste-char">0 characters</span>
-      <button class="paste-sample-btn" onclick="loadLandingSample()">Load sample PRD →</button>
+  <!-- Shown only after a file is loaded -->
+  <button id="file-roast-btn" onclick="doFileRoast()">
+    <span class="cta-icon">🔥</span>
+    <div>
+      <span class="cta-main">Roast My PRD</span>
+      <span class="cta-sub" id="file-roast-sub">File loaded and ready</span>
     </div>
-  </div>
+    <span class="cta-arrow">→</span>
+  </button>
 
-  <button id="landing-cta" disabled onclick="runFromLanding()">🔥 Roast My PRD</button>
+  <button id="landing-cta" onclick="openPasteDrawer()">
+    <span class="cta-icon">✍️</span>
+    <div>
+      <span class="cta-main">Paste Your PRD</span>
+      <span class="cta-sub">Or click here to paste text instead</span>
+    </div>
+    <span class="cta-arrow">→</span>
+  </button>
 
   <div class="feature-tags">
     <div class="feat-tag">🔥 Savage Roast</div>
@@ -927,6 +1223,40 @@ html,body{
     <div class="feat-tag">🛠 Actionable Fixes</div>
     <div class="feat-tag">🎤 Stakeholder Recorder</div>
     <div class="feat-tag">🏅 PM Level Badge</div>
+  </div>
+</div>
+
+<!-- ══ PASTE DRAWER ════════════════════════════════════ -->
+<div id="paste-drawer-overlay" onclick="closePasteDrawer()"></div>
+<div id="paste-drawer">
+  <div id="pd-header">
+    <div id="pd-title">
+      <span id="pd-title-icon">✍️</span>
+      <div>
+        <div id="pd-title-main">Paste your PRD</div>
+        <div id="pd-title-sub">We'll read between the lines. Even the vague ones.</div>
+      </div>
+    </div>
+    <button id="pd-close" onclick="closePasteDrawer()">✕</button>
+  </div>
+
+  <div id="pd-body">
+    <textarea
+      id="landing-paste-ta"
+      placeholder="Paste your entire PRD here — problem statement, goals, features, metrics, edge cases, the works.&#10;&#10;The more you give us, the more precisely we can roast you."
+      oninput="onLandingPaste()"
+      spellcheck="false"
+    ></textarea>
+  </div>
+
+  <div id="pd-footer">
+    <div id="pd-footer-left">
+      <span id="paste-char">0 characters</span>
+      <button class="pd-sample-btn" onclick="loadLandingSample()">Load sample PRD</button>
+    </div>
+    <button id="pd-roast-btn" disabled onclick="closePasteDrawerAndRun()">
+      🔥 Roast My PRD
+    </button>
   </div>
 </div>
 
@@ -1075,6 +1405,34 @@ html,body{
   </div>
 </div>
 
+<!-- ══ API KEY MODAL ════════════════════════════════════ -->
+<div id="key-overlay"></div>
+<div id="key-modal">
+  <div id="key-modal-icon">🔑</div>
+  <div id="key-modal-title">Connect a free AI provider</div>
+  <div id="provider-tabs" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;"></div>
+  <div id="key-modal-sub">✅ This provider has a free tier — no credit card needed.</div>
+  <div id="key-input-wrap">
+    <input
+      type="password"
+      id="key-input"
+      placeholder="AIza…"
+      autocomplete="off"
+      spellcheck="false"
+      oninput="onKeyInput()"
+    />
+    <button id="key-toggle" onclick="toggleKeyVis()" title="Show/hide key">👁</button>
+  </div>
+  <div id="key-hint"></div>
+  <div id="key-modal-actions">
+    <button id="key-cancel-btn" onclick="dismissKeyModal()">Use sample data instead</button>
+    <button id="key-save-btn" disabled onclick="saveKey()">Connect & Roast →</button>
+  </div>
+  <div id="key-clear-row" style="display:none;text-align:center;">
+    <button class="key-clear-btn" onclick="clearKey()">Remove saved key</button>
+  </div>
+</div>
+
 <!-- SCAN OVERLAY -->
 <div id="scan-overlay">
   <div id="scan-face-wrap">
@@ -1123,8 +1481,65 @@ html,body{
 <script>
 /* ════════════════════════════════════════════
    CONSTANTS & STATE
+   Backend-first: all AI calls go through
+   /api/analyze (Vercel serverless function)
+   API key is stored server-side as env var —
+   users never need to paste a key.
 ════════════════════════════════════════════ */
-const API = 'https://api.anthropic.com/v1/messages';
+const BACKEND_URL = '/api/analyze'; // Vercel routes this to /api/analyze.js
+
+// Keep PROVIDERS for the key modal UI fallback (direct mode when no backend)
+// In production on Vercel, BACKEND_URL is used — key modal is hidden.
+const IS_VERCEL = !window.location.hostname.includes('localhost') &&
+                  !window.location.hostname.includes('127.0.0.1') &&
+                  !window.location.hostname.includes('file:');
+
+let provider = 'backend'; // default when deployed
+let apiKey   = '';
+
+
+/* ════════════════════════════════════════════
+   API STATE (backend-first on Vercel)
+════════════════════════════════════════════ */
+let pendingAnalysisAfterKey = false;
+
+function updateNavKeyState() {
+  const btn = $('nav-key-btn');
+  const lbl = $('nav-key-label');
+  if (!btn) return;
+  // On Vercel deployment: show "Powered by Gemini ✓" always
+  btn.classList.add('connected');
+  btn.classList.remove('error');
+  if (lbl) lbl.textContent = 'Powered by Gemini ✓';
+}
+
+// Stub modal functions — key modal is hidden on Vercel deployment
+// (these exist so any old references don't throw)
+function openKeyModal(runAfter) {
+  // On Vercel: no key needed — just run analysis directly
+  if (runAfter) doAnalysis();
+}
+function renderProviderTabs() {}
+function selectProvider() {}
+function syncModalToProvider() {}
+function dismissKeyModal() {
+  const ko = $('key-overlay'); if(ko) ko.classList.remove('show');
+  const km = $('key-modal');   if(km) km.classList.remove('show');
+}
+function onKeyInput() {}
+function toggleKeyVis() {}
+function saveKey() {}
+function clearKey() {}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Hide key modal nav button on Vercel (not needed)
+  updateNavKeyState();
+  // Suppress key modal overlay click
+  $('key-overlay')?.addEventListener('click', dismissKeyModal);
+});
+setTimeout(updateNavKeyState, 0);
+
+
 
 const LEVELS = [
   { id:'god',      name:'PM God Mode',    range:[85,100], emoji:'👑', col:'#B46EFF', iconBg:'rgba(180,110,255,0.2)', wit:'"You don\'t write PRDs. You drop commandments."', xc1:'#B46EFF', xc2:'#7C3AED', footer:'Ascended. Survived the roast. 🌟' },
@@ -1185,7 +1600,43 @@ function goToLanding() {
   $('bar').classList.add('landing-hidden');
   $('nav-record-btn').style.display = 'none';
   $('recorder-panel').classList.remove('open');
+  // Reset upload box
+  $('landing-upload-title').textContent = 'Drop your PRD here';
+  $('landing-upload').style.borderColor = '';
+  $('landing-upload').style.borderStyle = '';
+  $('landing-upload').style.background = '';
+  $('upload-sub-el').style.display = '';
+  $('upload-types-el').style.display = '';
+  $('upload-icon-el').textContent = '📄';
+  // Hide fire CTA
+  $('file-roast-btn').classList.remove('show');
+  $('file-roast-sub').textContent = 'File loaded and ready';
+  // Reset CTA
+  const cta = $('landing-cta');
+  cta.classList.remove('file-ready');
+  prdText = '';
 }
+
+/* ════════════════════════════════════════════
+   PASTE DRAWER
+════════════════════════════════════════════ */
+function openPasteDrawer() {
+  $('paste-drawer').classList.add('open');
+  $('paste-drawer-overlay').classList.add('show');
+  setTimeout(() => { const ta=$('landing-paste-ta'); if(ta) ta.focus(); }, 360);
+}
+function closePasteDrawer() {
+  $('paste-drawer').classList.remove('open');
+  $('paste-drawer-overlay').classList.remove('show');
+}
+async function closePasteDrawerAndRun() {
+  if (!prdText.trim()) return;
+  closePasteDrawer();
+  showApp();
+  await doAnalysis();
+}
+// Close on Escape
+document.addEventListener('keydown', e => { if(e.key==='Escape') closePasteDrawer(); });
 
 /* ════════════════════════════════════════════
    LANDING INPUT
@@ -1194,7 +1645,6 @@ function setLandingIntensity(btn) {
   document.querySelectorAll('.int-pill').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   intensity = btn.dataset.lv;
-  // sync bar pills
   document.querySelectorAll('.ipill').forEach(b=>b.classList.remove('on'));
   document.querySelector(`.ipill[data-lv="${intensity}"]`)?.classList.add('on');
 }
@@ -1204,32 +1654,41 @@ function onLandingFile(file) {
   const r = new FileReader();
   r.onload = e => {
     prdText = e.target.result.substring(0,4000);
-    $('landing-upload-title').textContent = file.name.substring(0,30);
+    // Update upload box to show success state
+    $('landing-upload-title').textContent = '✓  ' + file.name.substring(0, 32);
+    $('upload-sub-el').style.display = 'none';
+    $('upload-types-el').style.display = 'none';
+    $('upload-icon-el').textContent = '✅';
     $('landing-upload').style.borderColor = 'var(--green)';
-    $('landing-upload').style.background = 'var(--bg-lighter)';
-    $('landing-cta').disabled = false;
+    $('landing-upload').style.borderStyle = 'solid';
+    $('landing-upload').style.background = 'rgba(30,224,122,0.05)';
+    // Show the dedicated fire CTA
+    $('file-roast-sub').textContent = file.name.substring(0,38) + '  ·  ' + (prdText.length/1000).toFixed(1) + 'k chars';
+    $('file-roast-btn').classList.add('show');
+    // Scroll to CTA if needed
+    $('file-roast-btn').scrollIntoView({behavior:'smooth', block:'nearest'});
   };
   r.readAsText(file);
+}
+
+async function doFileRoast() {
+  if (!prdText.trim()) return;
+  showApp();
+  await doAnalysis();
 }
 
 function onLandingPaste() {
   const v = $('landing-paste-ta').value;
   prdText = v;
-  $('paste-char').textContent = v.length.toLocaleString() + ' characters';
-  $('landing-cta').disabled = v.trim().length < 20;
+  const charEl = $('paste-char');
+  if (charEl) charEl.textContent = v.length.toLocaleString() + ' characters';
+  const btn = $('pd-roast-btn');
+  if (btn) btn.disabled = v.trim().length < 20;
 }
 
 function loadLandingSample() {
-  $('landing-paste-ta').value = SAMPLE;
-  prdText = SAMPLE;
-  $('paste-char').textContent = SAMPLE.length.toLocaleString() + ' characters';
-  $('landing-cta').disabled = false;
-}
-
-async function runFromLanding() {
-  if (!prdText.trim()) return;
-  showApp();
-  await doAnalysis();
+  const ta = $('landing-paste-ta');
+  if (ta) { ta.value = SAMPLE; ta.dispatchEvent(new Event('input')); }
 }
 
 // Drag on landing upload
@@ -1457,7 +1916,6 @@ function renderResults(data) {
 async function doAnalysis() {
   $('scan-overlay').classList.add('on');
   const ctaBtn=$('cta'); if(ctaBtn) ctaBtn.disabled=true;
-  const ldBtn=$('landing-cta'); if(ldBtn) ldBtn.disabled=true;
   const bp=$('bar-prog');if(bp)bp.style.width='0%';
   let p=0;
   progInterval=setInterval(()=>{p=Math.min(90,p+Math.random()*3+1);if(bp)bp.style.width=p+'%';},130);
@@ -1466,14 +1924,27 @@ async function doAnalysis() {
     const[m,s]=SCAN_MSGS[++msgIdx%SCAN_MSGS.length];
     $('scan-msg').textContent=m;$('scan-sub').textContent=s;sndScan();
   },900);
-  let data;
-  try{data=await callAPI(prdText);}catch(e){data=getFallback(prdText);}
+  let data; let usedFallback = false;
+  try {
+    data = await callAPI(prdText);
+  } catch(e) {
+    usedFallback = true;
+    const msg = e.message || '';
+    if (msg.includes('Even AI gave up') || msg.includes('quota') || msg.includes('429')) {
+      toast('Even AI gave up on this PRD 😅 — showing local analysis');
+    } else if (msg.includes('500') || msg.includes('502')) {
+      toast('Server hiccup — showing local analysis while we sort it out');
+    } else {
+      toast('Using local analysis — ' + msg.substring(0, 60));
+    }
+    data = getFallback(prdText);
+  }
   clearInterval(scanInterval);clearInterval(progInterval);
   if(bp){bp.style.width='100%';setTimeout(()=>{bp.style.width='0%';},500);}
   $('scan-overlay').classList.remove('on');
   const ctaBtn2=$('cta'); if(ctaBtn2) ctaBtn2.disabled=false;
-  const ldBtn2=$('landing-cta'); if(ldBtn2) ldBtn2.disabled=false;
   lastResult=data;renderResults(data);resetBar();
+  if (!usedFallback) toast('✓ Roasted by Gemini AI.');
 }
 
 async function callAPI(txt) {
@@ -1570,19 +2041,20 @@ PRD to review:
 ${txt.substring(0, 3500)}
 ---`;
 
-  const res = await fetch(API, {
+  // ── POST to Vercel backend /api/analyze ──────────────────────────────
+  const res = await fetch(BACKEND_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2200,
-      messages: [{ role: 'user', content: prompt }]
-    })
+    body: JSON.stringify({ prd: txt, intensity })
   });
-  if (!res.ok) throw new Error('API ' + res.status);
-  const d = await res.json();
-  const raw = d.content.map(c => c.text || '').join('').replace(/```json|```/g, '').trim();
-  const parsed = JSON.parse(raw);
+
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    throw new Error(errBody.error || 'API ' + res.status);
+  }
+
+  const parsed = await res.json();
+  // Normalise arrays in case backend returns slightly different shapes
   parsed.roasts    = (parsed.roasts    || []).slice(0, 5);
   parsed.applause  = (parsed.applause  || []).slice(0, 5);
   parsed.fixes     = (parsed.fixes     || []).slice(0, 5);
@@ -1951,10 +2423,14 @@ Analyse the feedback. Return ONLY raw JSON array (no markdown):
   {"type":"neutral","text":"<something that needs more data or context before deciding>"}
 ]
 Be honest, witty, and specific. Reference the actual transcript content.`;
-  const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})});
-  if(!res.ok)throw new Error();
-  const d=await res.json();
-  return JSON.parse(d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim());
+  if (!apiKey) throw new Error('no-key'); // unused on backend, kept for safety
+  const res = await fetch('/api/stakeholder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ transcript })
+  });
+  if (!res.ok) throw new Error('API ' + res.status);
+  return await res.json();
 }
 
 function getMockInsights(segs){
