@@ -77,29 +77,39 @@ Analyse the feedback. Return ONLY a raw JSON array (no markdown, no backticks, n
 ]
 Be honest, witty, and specific. Always reference the actual transcript content.`;
 
-  try {
-    const { GoogleGenerativeAI } = require('@google/generative-ai');
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-    const result = await model.generateContent(prompt);
-    const rawText = result.response.text();
+  const MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b'];
+  const { GoogleGenerativeAI } = require('@google/generative-ai');
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+  let lastErr = null;
 
-    let parsed;
-    try { parsed = extractJSON(rawText); }
-    catch (e) {
-      console.error('[stakeholder] JSON extraction failed:', e.message);
-      return res.status(502).json({ error: 'AI returned an unreadable response — try again' });
+  for (const modelName of MODELS) {
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName });
+      const result = await model.generateContent(prompt);
+      const rawText = result.response.text();
+      let parsed;
+      try { parsed = extractJSON(rawText); }
+      catch (e) {
+        console.error('[stakeholder] JSON extraction failed:', e.message);
+        return res.status(502).json({ error: 'AI returned an unreadable response — try again' });
+      }
+      const insights = Array.isArray(parsed) ? parsed : (parsed.insights || parsed.feedback || []);
+      const safe = insights
+        .filter(i => i && typeof i.type === 'string' && typeof i.text === 'string')
+        .map(i => ({ type: ['take','ignore','neutral'].includes(i.type) ? i.type : 'neutral', text: i.text.trim() }))
+        .slice(0, 8);
+      return res.status(200).json(safe);
+    } catch (err) {
+      lastErr = err.message || String(err);
+      const isQuota = lastErr.includes('429') || lastErr.includes('quota') || lastErr.includes('QUOTA');
+      if (!isQuota) break;
+      console.warn(`[stakeholder] Quota on ${modelName}, trying next…`);
     }
-
-    const insights = Array.isArray(parsed) ? parsed : (parsed.insights || parsed.feedback || []);
-    const safe = insights
-      .filter(i => i && typeof i.type === 'string' && typeof i.text === 'string')
-      .map(i => ({ type: ['take','ignore','neutral'].includes(i.type) ? i.type : 'neutral', text: i.text.trim() }))
-      .slice(0, 8);
-
-    return res.status(200).json(safe);
-  } catch (err) {
-    console.error('[stakeholder] error:', err.message);
-    return res.status(500).json({ error: 'Even AI gave up 😅 — ' + (err.message||'').substring(0,100) });
   }
+
+  const msg = lastErr || '';
+  if (msg.includes('429') || msg.includes('quota')) {
+    return res.status(429).json({ error: 'All Gemini models quota-limited — try again later' });
+  }
+  return res.status(500).json({ error: 'Even AI gave up 😅 — ' + msg.substring(0, 100) });
 };
